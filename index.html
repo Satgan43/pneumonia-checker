@@ -2,103 +2,469 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pneumonia Image Check</title>
+  <title>Intelli-Monia | Pneumonia Image Check</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 25px;
-      max-width: 900px;
+    :root{
+      --glass: rgba(255,255,255,0.10);
+      --glass2: rgba(255,255,255,0.14);
+      --border: rgba(255,255,255,0.22);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
     }
-    .muted { color: #555; }
-    .row { display: flex; gap: 25px; flex-wrap: wrap; }
-    #preview { max-width: 350px; border: 1px solid #ccc; border-radius: 8px; padding: 6px; }
-    .card { border: 1px solid #ddd; border-radius: 10px; padding: 14px; margin-bottom: 15px; }
-    .bar { height: 10px; background: #eee; border-radius: 999px; overflow: hidden; margin-top: 5px; }
-    .fill { height: 100%; width: 0%; background: #333; }
-    .big { font-size: 1.2em; font-weight: bold; margin-top: 10px; }
+
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(255,255,255,0.12), transparent 55%),
+                  radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,0.10), transparent 55%),
+                  linear-gradient(120deg, #6d28d9 0%, #2563eb 35%, #06b6d4 100%);
+    }
+
+    /* Liquid background blobs */
+    .liquid-bg{
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+    }
+    .blob{
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      filter: url(#goo) blur(2px);
+      opacity: 0.85;
+      mix-blend-mode: soft-light;
+      transform: translate3d(0,0,0);
+      animation: floaty 14s ease-in-out infinite;
+    }
+    .blob.one{
+      left: -120px;
+      top: -140px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0.0) 60%),
+                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.08), rgba(0,0,0,0) 55%),
+                  linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
+      animation-duration: 16s;
+    }
+    .blob.two{
+      right: -170px;
+      top: 40px;
+      width: 620px;
+      height: 620px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0.0) 60%),
+                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.10), rgba(0,0,0,0) 55%),
+                  linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      animation-duration: 18s;
+      animation-delay: -4s;
+    }
+    .blob.three{
+      left: 10%;
+      bottom: -220px;
+      width: 700px;
+      height: 700px;
+      opacity: 0.7;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0.0) 60%),
+                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.08), rgba(0,0,0,0) 55%),
+                  linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+      animation-duration: 20s;
+      animation-delay: -7s;
+    }
+
+    @keyframes floaty{
+      0%   { transform: translate(-10px, -8px) scale(1.02); }
+      25%  { transform: translate(18px, 14px) scale(1.08); }
+      50%  { transform: translate(-6px, 22px) scale(1.03); }
+      75%  { transform: translate(12px, -10px) scale(1.10); }
+      100% { transform: translate(-10px, -8px) scale(1.02); }
+    }
+
+    /* Page container */
+    .wrap{
+      width: min(980px, calc(100% - 40px));
+      margin: 34px auto 60px;
+      animation: fadeUp 700ms ease-out both;
+    }
+    @keyframes fadeUp{
+      from{ opacity: 0; transform: translateY(10px); }
+      to{ opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header */
+    .hero{
+      padding: 26px 22px 18px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .title{
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.05;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.2px;
+    }
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+      max-width: 85ch;
+    }
+
+    /* Divider headline */
+    .sectionHead{
+      margin: 18px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sectionHead h2{
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0.2px;
+    }
+    .line{
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.05));
+    }
+
+    /* Cards */
+    .card{
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 240ms ease, border-color 240ms ease, background 240ms ease;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.32);
+      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+    }
+
+    /* Controls */
+    .controls{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    button{
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+    button:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.32); }
+    button:active{ transform: translateY(0px) scale(0.99); }
+    button:disabled{ opacity: 0.6; cursor: not-allowed; }
+
+    input[type="file"]{
+      border: 1px dashed rgba(255,255,255,0.28);
+      border-radius: 12px;
+      padding: 10px;
+      color: var(--muted);
+      background: rgba(0,0,0,0.10);
+      transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+      max-width: 100%;
+    }
+    input[type="file"]:hover{
+      border-color: rgba(255,255,255,0.40);
+      background: rgba(0,0,0,0.14);
+    }
+
+    .status{
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Content layout */
+    .grid{
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    /* Preview */
+    .previewBox{
+      display: grid;
+      place-items: center;
+      min-height: 380px;
+      padding: 14px;
+    }
+    #preview{
+      width: 100%;
+      max-width: 380px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.15);
+      display: none;
+      transition: opacity 250ms ease, transform 250ms ease;
+    }
+    #preview.show{
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .placeholder{
+      text-align: center;
+      color: rgba(255,255,255,0.70);
+      padding: 22px 10px;
+    }
+    .placeholder b{
+      color: rgba(255,255,255,0.92);
+    }
+
+    /* Predictions */
+    .big{
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0 0 10px;
+      letter-spacing: 0.2px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 260ms ease, transform 260ms ease;
+    }
+    .big.show{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .predCard{
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.10);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+      transition: transform 200ms ease, border-color 200ms ease, background 200ms ease;
+    }
+    .predCard:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.28);
+      background: rgba(0,0,0,0.13);
+    }
+
+    .bar{
+      height: 10px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .fill{
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.65), rgba(255,255,255,0.18));
+      transition: width 520ms cubic-bezier(.2,.9,.2,1);
+    }
+
+    .footerNote{
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
   </style>
 </head>
 
 <body>
+  <!-- SVG filter for a gooey / liquid feel -->
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" mode="matrix"
+        values="
+          1 0 0 0 0
+          0 1 0 0 0
+          0 0 1 0 0
+          0 0 0 22 -8"
+        result="goo"/>
+      <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+    </filter>
+  </svg>
 
-<h1>Pneumonia Image Check</h1>
-<p class="muted">Upload a chest X-ray. This is for educational purposes only and is not a medical diagnosis.</p>
-
-<div class="card">
-  <button id="loadBtn">Load Model</button>
-  <span id="status" class="muted"> Model not loaded.</span>
-</div>
-
-<div class="card">
-  <input type="file" id="fileInput" accept="image/*" disabled>
-</div>
-
-<div class="row">
-  <div>
-    <h3>Image Preview</h3>
-    <img id="preview">
+  <div class="liquid-bg" aria-hidden="true">
+    <div class="blob one"></div>
+    <div class="blob two"></div>
+    <div class="blob three"></div>
   </div>
 
-  <div id="results">
-    <h3>Predictions</h3>
-    <div id="topResult" class="big"></div>
-    <div id="labelContainer"></div>
-  </div>
-</div>
+  <main class="wrap">
+    <section class="hero">
+      <h1 class="title">Welcome to Intelli-Monia</h1>
+      <p class="subtitle">
+        <b>Mission:</b> Intelli-Monia uses AI to help quickly detect signs of pneumonia from chest X-rays,
+        so people can get faster guidance and potentially reduce the wait time involved in getting initial answers at a doctor’s office.
+        This is for educational purposes only and does not provide a medical diagnosis.
+      </p>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+      <div class="sectionHead" style="margin-top:16px;">
+        <h2>Check it out</h2>
+        <div class="line"></div>
+      </div>
 
-<script>
-  const MODEL_URL = "./"; // because model files are in the same folder
+      <div class="card">
+        <div class="controls">
+          <button id="loadBtn">Load Model</button>
+          <span id="status" class="status">Model not loaded.</span>
+        </div>
+        <div style="height:12px;"></div>
+        <input type="file" id="fileInput" accept="image/*" disabled>
+      </div>
+    </section>
 
-  let model, maxPredictions;
+    <section class="grid">
+      <div class="card previewBox">
+        <div id="placeholder" class="placeholder">
+          <b>Step 1:</b> Click <b>Load Model</b><br/>
+          <b>Step 2:</b> Upload a chest X-ray image<br/><br/>
+          Your preview will appear here.
+        </div>
+        <img id="preview" alt="Uploaded image preview">
+      </div>
 
-  const loadBtn = document.getElementById("loadBtn");
-  const statusEl = document.getElementById("status");
-  const fileInput = document.getElementById("fileInput");
-  const preview = document.getElementById("preview");
-  const labelContainer = document.getElementById("labelContainer");
-  const topResult = document.getElementById("topResult");
+      <div class="card">
+        <h2 style="margin:0 0 10px; font-size:18px;">Predictions</h2>
+        <div id="topResult" class="big"></div>
+        <div id="labelContainer"></div>
 
-  loadBtn.onclick = async () => {
-    statusEl.textContent = " Loading model...";
-    model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
-    maxPredictions = model.getTotalClasses();
-    statusEl.textContent = " Model loaded. Upload an image.";
-    fileInput.disabled = false;
-  };
+        <div class="footerNote">
+          Note: Results depend on the training data and image quality. If you have health concerns, consult a medical professional.
+        </div>
+      </div>
+    </section>
+  </main>
 
-  fileInput.addEventListener("change", () => {
-    const file = fileInput.files[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    preview.src = url;
-    preview.onload = () => predict();
-  });
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
-  async function predict() {
-    const prediction = await model.predict(preview);
-    prediction.sort((a,b) => b.probability - a.probability);
+  <script>
+    // Your repo layout shows: index.html, metadata.json, model.json, weights.bin in the SAME folder.
+    // So the model URL is the current folder.
+    const MODEL_URL = "./";
 
-    topResult.textContent =
-      `Top result: ${prediction[0].className} (${Math.round(prediction[0].probability*100)}%)`;
+    let model, maxPredictions;
 
-    labelContainer.innerHTML = "";
+    const loadBtn = document.getElementById("loadBtn");
+    const statusEl = document.getElementById("status");
+    const fileInput = document.getElementById("fileInput");
+    const preview = document.getElementById("preview");
+    const placeholder = document.getElementById("placeholder");
+    const labelContainer = document.getElementById("labelContainer");
+    const topResult = document.getElementById("topResult");
 
-    prediction.forEach(p => {
-      const pct = Math.round(p.probability * 100);
+    function setStatus(msg){ statusEl.textContent = msg; }
 
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `<b>${p.className}: ${pct}%</b>
-                       <div class="bar"><div class="fill" style="width:${pct}%"></div></div>`;
-      labelContainer.appendChild(div);
+    function resetUI(){
+      labelContainer.innerHTML = "";
+      topResult.textContent = "";
+      topResult.classList.remove("show");
+    }
+
+    loadBtn.addEventListener("click", async () => {
+      try{
+        loadBtn.disabled = true;
+        setStatus("Loading model...");
+        model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+        maxPredictions = model.getTotalClasses();
+        setStatus("Model loaded. Upload an image.");
+        fileInput.disabled = false;
+      } catch (e){
+        console.error(e);
+        setStatus("Failed to load model. Make sure model.json, metadata.json, and weights.bin are in the repo root.");
+        loadBtn.disabled = false;
+      }
     });
-  }
-</script>
 
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+
+      resetUI();
+
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+
+      preview.onload = async () => {
+        placeholder.style.display = "none";
+        preview.style.display = "block";
+        preview.classList.add("show");
+
+        try{
+          setStatus("Predicting...");
+          await predict();
+          setStatus("Done.");
+        } catch (e){
+          console.error(e);
+          setStatus("Prediction failed.");
+        }
+      };
+    });
+
+    async function predict(){
+      if (!model) return;
+
+      const prediction = await model.predict(preview);
+      prediction.sort((a,b) => b.probability - a.probability);
+
+      const best = prediction[0];
+      const bestPct = Math.round(best.probability * 100);
+
+      topResult.textContent = `Top result: ${best.className} (${bestPct}%)`;
+      topResult.classList.add("show");
+
+      labelContainer.innerHTML = "";
+
+      prediction.forEach(p => {
+        const pct = Math.round(p.probability * 100);
+
+        const card = document.createElement("div");
+        card.className = "predCard";
+
+        const label = document.createElement("div");
+        label.style.fontWeight = "700";
+        label.textContent = `${p.className}: ${pct}%`;
+
+        const bar = document.createElement("div");
+        bar.className = "bar";
+
+        const fill = document.createElement("div");
+        fill.className = "fill";
+        // set after append so transitions animate nicely
+        fill.style.width = "0%";
+
+        bar.appendChild(fill);
+        card.appendChild(label);
+        card.appendChild(bar);
+        labelContainer.appendChild(card);
+
+        requestAnimationFrame(() => {
+          fill.style.width = `${pct}%`;
+        });
+      });
+    }
+  </script>
 </body>
 </html>
