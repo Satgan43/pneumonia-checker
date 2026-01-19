@@ -1,296 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Intelli-Monia | Pneumonia Image Check</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Intelli-Monia | AI Pneumonia Screen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root{
-      --glass: rgba(255,255,255,0.10);
-      --glass2: rgba(255,255,255,0.14);
-      --border: rgba(255,255,255,0.22);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.72);
-      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --bg1:#043a3a;
+      --bg2:#0b6b6b;
+      --bg3:#0ea5a4;
+      --ink:#0a2a2a;
+      --text:#f2fffe;
+      --muted:rgba(242,255,254,0.78);
+      --glass:rgba(255,255,255,0.10);
+      --glass2:rgba(255,255,255,0.14);
+      --border:rgba(255,255,255,0.22);
+      --shadow: 0 18px 60px rgba(0,0,0,0.35);
+      --radius: 18px;
+      --accent:#46e3dd;
+      --accent2:#a7fff8;
     }
 
-    *{ box-sizing: border-box; }
-    html, body { height: 100%; }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
-      margin: 0;
+      margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      overflow-x: hidden;
-      background: radial-gradient(1200px 600px at 15% 10%, rgba(255,255,255,0.12), transparent 55%),
-                  radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,0.10), transparent 55%),
-                  linear-gradient(120deg, #6d28d9 0%, #2563eb 35%, #06b6d4 100%);
+      background:
+        radial-gradient(1200px 700px at 15% 15%, rgba(255,255,255,0.10), transparent 55%),
+        radial-gradient(900px 700px at 90% 10%, rgba(255,255,255,0.08), transparent 55%),
+        linear-gradient(120deg, var(--bg1) 0%, var(--bg2) 35%, var(--bg3) 100%);
+      overflow-x:hidden;
     }
 
-    /* Liquid background blobs */
-    .liquid-bg{
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      overflow: hidden;
-    }
+    /* Liquid / goo background blobs */
+    .liquid-bg{ position:fixed; inset:0; z-index:-3; overflow:hidden; }
     .blob{
-      position: absolute;
-      width: 520px;
-      height: 520px;
-      border-radius: 50%;
-      filter: url(#goo) blur(2px);
-      opacity: 0.85;
-      mix-blend-mode: soft-light;
-      transform: translate3d(0,0,0);
-      animation: floaty 14s ease-in-out infinite;
-    }
-    .blob.one{
-      left: -120px;
-      top: -140px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0.0) 60%),
-                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.08), rgba(0,0,0,0) 55%),
-                  linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
-      animation-duration: 16s;
-    }
-    .blob.two{
-      right: -170px;
-      top: 40px;
+      position:absolute;
       width: 620px;
       height: 620px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0.0) 60%),
-                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.10), rgba(0,0,0,0) 55%),
-                  linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
-      animation-duration: 18s;
-      animation-delay: -4s;
+      border-radius: 50%;
+      filter: url(#goo) blur(1px);
+      opacity: 0.80;
+      mix-blend-mode: soft-light;
+      animation: floaty 18s ease-in-out infinite;
+      transform: translate3d(0,0,0);
+    }
+    .blob.one{
+      left:-180px; top:-180px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.30), rgba(255,255,255,0.0) 60%),
+        linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
+      animation-duration: 19s;
+    }
+    .blob.two{
+      right:-220px; top:40px;
+      width: 720px; height: 720px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.0) 60%),
+        linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      animation-duration: 22s;
+      animation-delay: -6s;
     }
     .blob.three{
-      left: 10%;
-      bottom: -220px;
-      width: 700px;
-      height: 700px;
-      opacity: 0.7;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0.0) 60%),
-                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.08), rgba(0,0,0,0) 55%),
-                  linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
-      animation-duration: 20s;
-      animation-delay: -7s;
+      left: 10%; bottom:-260px;
+      width: 820px; height: 820px;
+      opacity: 0.70;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.20), rgba(255,255,255,0.0) 60%),
+        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+      animation-duration: 24s;
+      animation-delay: -10s;
     }
-
     @keyframes floaty{
       0%   { transform: translate(-10px, -8px) scale(1.02); }
-      25%  { transform: translate(18px, 14px) scale(1.08); }
-      50%  { transform: translate(-6px, 22px) scale(1.03); }
-      75%  { transform: translate(12px, -10px) scale(1.10); }
+      25%  { transform: translate(24px, 16px) scale(1.08); }
+      50%  { transform: translate(-6px, 24px) scale(1.03); }
+      75%  { transform: translate(14px, -12px) scale(1.10); }
       100% { transform: translate(-10px, -8px) scale(1.02); }
     }
 
-    /* Page container */
-    .wrap{
-      width: min(980px, calc(100% - 40px));
-      margin: 34px auto 60px;
-      animation: fadeUp 700ms ease-out both;
-    }
+    /* Layout */
+    .wrap{ width:min(1120px, calc(100% - 44px)); margin: 26px auto 70px; }
+    .fadeIn{ animation: fadeUp 700ms ease-out both; }
     @keyframes fadeUp{
-      from{ opacity: 0; transform: translateY(10px); }
-      to{ opacity: 1; transform: translateY(0); }
+      from{ opacity:0; transform: translateY(10px); }
+      to{ opacity:1; transform: translateY(0); }
     }
 
-    /* Header */
-    .hero{
-      padding: 26px 22px 18px;
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
-      border-radius: 18px;
-      box-shadow: var(--shadow);
+    /* Top nav brand (simple) */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
     }
-    .title{
-      font-size: clamp(28px, 4vw, 40px);
-      line-height: 1.05;
-      margin: 0 0 8px 0;
-      letter-spacing: 0.2px;
+    .logoDot{
+      width: 12px; height: 12px; border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, var(--accent2), var(--accent));
+      box-shadow: 0 0 0 4px rgba(70,227,221,0.10);
     }
-    .subtitle{
-      margin: 0;
+    .brand h3{ margin:0; font-size: 14px; letter-spacing: 0.2px; }
+    .pill{
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.12);
       color: var(--muted);
-      font-size: 15px;
-      line-height: 1.45;
-      max-width: 85ch;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
-    /* Divider headline */
-    .sectionHead{
-      margin: 18px 0 10px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    /* HERO like your example */
+    .hero{
+      display:grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
     }
-    .sectionHead h2{
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: 0.2px;
-    }
-    .line{
-      height: 1px;
-      flex: 1;
-      background: linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.05));
+    @media (max-width: 980px){
+      .hero{ grid-template-columns: 1fr; }
     }
 
-    /* Cards */
-    .card{
+    .heroLeft{
       border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: var(--radius);
+      overflow:hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      transition: transform 240ms ease, border-color 240ms ease, background 240ms ease;
+      position: relative;
+      min-height: 360px;
+    }
+    .heroLeft::before{
+      content:"";
+      position:absolute;
+      inset:-120px auto auto -120px;
+      width: 520px;
+      height: 520px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 35% 35%, rgba(70,227,221,0.24), rgba(70,227,221,0.02) 65%);
+      filter: blur(2px);
+      opacity: 0.95;
+      pointer-events:none;
+    }
+    .heroLeftInner{
+      position:relative;
+      padding: 28px 24px 22px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap: 10px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      color: rgba(242,255,254,0.90);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .kickerLine{
+      width: 34px; height: 2px;
+      background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.0));
+      border-radius: 999px;
+    }
+    h1{
+      margin:0;
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.03;
+      letter-spacing: -0.6px;
+    }
+    .mission{
+      margin: 6px 0 0;
+      max-width: 70ch;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .ctaRow{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn{
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.14);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 750;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.32);
+    }
+    .btn:active{ transform: translateY(0px) scale(0.99); }
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(70,227,221,0.28), rgba(255,255,255,0.10));
+      border-color: rgba(70,227,221,0.36);
+    }
+
+    .heroRight{
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      background: rgba(0,0,0,0.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position: relative;
+      min-height: 360px;
+    }
+    .heroPhoto{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.10) 55%, rgba(0,0,0,0.0)),
+        radial-gradient(1200px 600px at 70% 30%, rgba(70,227,221,0.16), transparent 60%),
+        url("https://images.unsplash.com/photo-1580281657527-47f249e8f9bf?auto=format&fit=crop&w=1600&q=60");
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.02);
+      filter: saturate(1.05) contrast(1.05);
+    }
+    .heroRightOverlay{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(500px 280px at 80% 20%, rgba(255,255,255,0.10), rgba(255,255,255,0.0)),
+        linear-gradient(180deg, rgba(0,0,0,0.00), rgba(0,0,0,0.20));
+    }
+    .heroRightBadge{
+      position:absolute;
+      right: 14px;
+      bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(0,0,0,0.22);
+      color: rgba(242,255,254,0.90);
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      max-width: 260px;
+    }
+
+    /* Section heading like "Lifelong Health Begins Here" */
+    .sectionTitle{
+      font-size: clamp(28px, 4.5vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -0.4px;
+      margin: 18px 0 12px;
+    }
+
+    /* Cards grid */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 980px){
+      .cards{ grid-template-columns: 1fr; }
+    }
+    .card{
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 14px 45px rgba(0,0,0,0.28);
+      padding: 18px;
+      transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
     }
     .card:hover{
       transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.32);
-      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+      background: rgba(255,255,255,0.10);
+      border-color: rgba(255,255,255,0.26);
     }
-
-    /* Controls */
-    .controls{
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    button{
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.12);
-      color: var(--text);
-      padding: 10px 14px;
+    .card h3{ margin:0 0 8px; font-size: 22px; letter-spacing: -0.2px; }
+    .card p{ margin:0; color: var(--muted); line-height: 1.55; }
+    .icon{
+      width: 40px; height: 40px;
       border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+      background: rgba(70,227,221,0.18);
+      border: 1px solid rgba(70,227,221,0.26);
+      display:grid;
+      place-items:center;
+      margin-bottom: 10px;
     }
-    button:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.32); }
-    button:active{ transform: translateY(0px) scale(0.99); }
-    button:disabled{ opacity: 0.6; cursor: not-allowed; }
 
+    /* Tool area */
+    .toolWrap{
+      display:grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+    @media (max-width: 980px){ .toolWrap{ grid-template-columns:1fr; } }
+
+    .toolCard{
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--radius);
+      background: rgba(0,0,0,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 18px;
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      margin-top: 10px;
+    }
+    .status{
+      color: var(--muted);
+      font-size: 13px;
+    }
     input[type="file"]{
       border: 1px dashed rgba(255,255,255,0.28);
       border-radius: 12px;
       padding: 10px;
-      color: var(--muted);
-      background: rgba(0,0,0,0.10);
-      transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+      background: rgba(255,255,255,0.05);
+      color: rgba(242,255,254,0.85);
       max-width: 100%;
     }
-    input[type="file"]:hover{
-      border-color: rgba(255,255,255,0.40);
-      background: rgba(0,0,0,0.14);
-    }
-
-    .status{
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* Content layout */
-    .grid{
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 16px;
-      margin-top: 12px;
-    }
-    @media (max-width: 860px){
-      .grid{ grid-template-columns: 1fr; }
+    input[type="file"]::file-selector-button{
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor:pointer;
+      font-weight: 650;
+      margin-right: 10px;
     }
 
     /* Preview */
     .previewBox{
-      display: grid;
-      place-items: center;
-      min-height: 380px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.06);
       padding: 14px;
+      display:grid;
+      place-items:center;
+      min-height: 420px;
+      overflow:hidden;
     }
     #preview{
       width: 100%;
-      max-width: 380px;
-      border-radius: 14px;
+      max-width: 420px;
+      border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.15);
-      display: none;
-      transition: opacity 250ms ease, transform 250ms ease;
-    }
-    #preview.show{
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .placeholder{
-      text-align: center;
-      color: rgba(255,255,255,0.70);
-      padding: 22px 10px;
-    }
-    .placeholder b{
-      color: rgba(255,255,255,0.92);
-    }
-
-    /* Predictions */
-    .big{
-      font-size: 18px;
-      font-weight: 800;
-      margin: 0 0 10px;
-      letter-spacing: 0.2px;
-      opacity: 0;
-      transform: translateY(6px);
+      background: rgba(0,0,0,0.20);
+      display:none;
+      opacity:0;
+      transform: translateY(8px);
       transition: opacity 260ms ease, transform 260ms ease;
     }
-    .big.show{
-      opacity: 1;
-      transform: translateY(0);
+    #preview.show{ display:block; opacity:1; transform: translateY(0); }
+    .placeholder{
+      text-align:center;
+      color: rgba(242,255,254,0.78);
+      line-height: 1.5;
+      padding: 18px;
+    }
+    .placeholder b{ color: rgba(242,255,254,0.92); }
+
+    /* Result big banner */
+    .resultBanner{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(0,0,0,0.12);
+      padding: 14px;
+      margin-top: 10px;
+      display:none;
+      animation: pop 240ms ease-out both;
+    }
+    @keyframes pop{
+      from{ opacity:0; transform: translateY(8px); }
+      to{ opacity:1; transform: translateY(0); }
     }
 
+    .resultTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 850;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08);
+    }
+    .badgeDot{
+      width: 10px; height: 10px; border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(70,227,221,0.12);
+    }
+    .confidence{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .advice{
+      margin-top: 10px;
+      color: rgba(242,255,254,0.88);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .advice ul{ margin: 8px 0 0 18px; color: var(--muted); }
+    .advice li{ margin: 6px 0; }
+
+    /* Prediction list cards */
+    .predList{ margin-top: 12px; }
     .predCard{
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.10);
-      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      border-radius: 16px;
       padding: 12px;
-      margin-bottom: 12px;
-      transition: transform 200ms ease, border-color 200ms ease, background 200ms ease;
+      margin-bottom: 10px;
+      transition: transform 200ms ease, background 200ms ease;
     }
-    .predCard:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.28);
-      background: rgba(0,0,0,0.13);
-    }
-
-    .bar{
-      height: 10px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
+    .predCard:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.08); }
+    .bar{ height: 10px; background: rgba(255,255,255,0.12); border-radius: 999px; overflow:hidden; margin-top: 8px; }
     .fill{
-      height: 100%;
-      width: 0%;
+      height:100%;
+      width:0%;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.65), rgba(255,255,255,0.18));
+      background: linear-gradient(90deg, rgba(70,227,221,0.75), rgba(255,255,255,0.10));
       transition: width 520ms cubic-bezier(.2,.9,.2,1);
     }
 
-    .footerNote{
-      margin-top: 12px;
+    /* Post note */
+    .foot{
+      margin-top: 14px;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.4;
+      line-height: 1.5;
     }
+
+    /* Sparkles */
+    .sparkle{
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      animation: sparkle 700ms ease-out forwards;
+      opacity: 0.95;
+    }
+    .sparkle::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95), rgba(70,227,221,0.75), rgba(255,255,255,0.0) 70%);
+      border-radius: 999px;
+    }
+    .sparkle::after{
+      content:"";
+      position:absolute;
+      left: 50%; top: 50%;
+      width: 18px; height: 18px;
+      transform: translate(-50%,-50%) rotate(45deg);
+      background:
+        linear-gradient(transparent 46%, rgba(255,255,255,0.75) 50%, transparent 54%),
+        linear-gradient(90deg, transparent 46%, rgba(70,227,221,0.55) 50%, transparent 54%);
+      opacity: 0.9;
+    }
+    @keyframes sparkle{
+      0%   { transform: translate(-50%, -50%) scale(0.9); filter: blur(0px); }
+      60%  { transform: translate(-50%, -50%) scale(1.4); filter: blur(0px); }
+      100% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; filter: blur(1px); }
+    }
+
+    /* Smooth scrolling */
+    html{ scroll-behavior: smooth; }
   </style>
 </head>
 
 <body>
-  <!-- SVG filter for a gooey / liquid feel -->
+  <!-- Goo filter for liquid blobs -->
   <svg width="0" height="0" style="position:absolute">
     <filter id="goo">
       <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
@@ -311,48 +543,113 @@
     <div class="blob three"></div>
   </div>
 
-  <main class="wrap">
-    <section class="hero">
-      <h1 class="title">Welcome to Intelli-Monia</h1>
-      <p class="subtitle">
-        <b>Mission:</b> Intelli-Monia uses AI to help quickly detect signs of pneumonia from chest X-rays,
-        so people can get faster guidance and potentially reduce the wait time involved in getting initial answers at a doctor’s office.
-        This is for educational purposes only and does not provide a medical diagnosis.
-      </p>
+  <main class="wrap fadeIn">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logoDot"></div>
+        <h3>Intelli-Monia</h3>
+      </div>
+      <div class="pill">Educational demo • Not medical advice</div>
+    </div>
 
-      <div class="sectionHead" style="margin-top:16px;">
-        <h2>Check it out</h2>
-        <div class="line"></div>
+    <!-- HERO / opening page -->
+    <section class="hero">
+      <div class="heroLeft">
+        <div class="heroLeftInner">
+          <div class="kicker"><span class="kickerLine"></span>AI-assisted screening</div>
+          <h1>Fast, simple pneumonia screening.</h1>
+          <p class="mission">
+            <b>Mission statement:</b> Intelli-Monia uses AI to help flag possible pneumonia on chest X-rays in seconds,
+            helping patients and families get faster information and potentially reduce time spent waiting for initial answers in a doctor’s office.
+            This tool is for education only and does not diagnose medical conditions.
+          </p>
+
+          <div class="ctaRow">
+            <a class="btn primary" href="#tool">Check it out ↓</a>
+            <span class="pill" style="border-color:rgba(70,227,221,0.28); color:rgba(242,255,254,0.85);">
+              Upload → Test → Get guidance
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="controls">
-          <button id="loadBtn">Load Model</button>
-          <span id="status" class="status">Model not loaded.</span>
+      <div class="heroRight">
+        <div class="heroPhoto" role="img" aria-label="Healthcare themed photo background"></div>
+        <div class="heroRightOverlay"></div>
+        <div class="heroRightBadge">
+          Built with Teachable Machine + TensorFlow.js • Runs in the browser (no image storage by default)
         </div>
-        <div style="height:12px;"></div>
-        <input type="file" id="fileInput" accept="image/*" disabled>
       </div>
     </section>
 
-    <section class="grid">
-      <div class="card previewBox">
-        <div id="placeholder" class="placeholder">
-          <b>Step 1:</b> Click <b>Load Model</b><br/>
-          <b>Step 2:</b> Upload a chest X-ray image<br/><br/>
-          Your preview will appear here.
-        </div>
-        <img id="preview" alt="Uploaded image preview">
+    <!-- Big section title like second screenshot -->
+    <h2 class="sectionTitle">Lifelong Health Begins Here</h2>
+
+    <!-- Feature / analytics / facts cards -->
+    <section class="cards">
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Faster first look</h3>
+        <p>
+          AI can produce a preliminary result in seconds after upload, which can help prioritize who might need urgent attention first.
+        </p>
       </div>
 
       <div class="card">
-        <h2 style="margin:0 0 10px; font-size:18px;">Predictions</h2>
-        <div id="topResult" class="big"></div>
-        <div id="labelContainer"></div>
+        <div class="icon">📊</div>
+        <h3>Analytics & impact</h3>
+        <p>
+          Future add-ons: track average time-to-result, number of screenings completed, and model confidence trends to measure how the tool improves workflow.
+        </p>
+      </div>
 
-        <div class="footerNote">
-          Note: Results depend on the training data and image quality. If you have health concerns, consult a medical professional.
+      <div class="card">
+        <div class="icon">🔒</div>
+        <h3>Privacy-first</h3>
+        <p>
+          Future add-ons: optional consent-based logging, anonymization, and secure storage. The basic demo runs fully in your browser.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tool / uploader -->
+    <section id="tool" class="toolWrap">
+      <div class="toolCard">
+        <h3 style="margin:0 0 6px;">Try Intelli-Monia</h3>
+        <div class="status" id="status">Model not loaded.</div>
+
+        <div class="controls">
+          <button class="btn" id="loadBtn" type="button">Load Model</button>
+          <input type="file" id="fileInput" accept="image/*" disabled />
+          <button class="btn primary" id="testBtn" type="button" disabled>Test Photo</button>
         </div>
+
+        <div class="resultBanner" id="resultBanner">
+          <div class="resultTop">
+            <div class="badge" id="resultBadge">
+              <span class="badgeDot" id="badgeDot"></span>
+              <span id="resultLabel">Result</span>
+            </div>
+            <div class="confidence" id="resultConfidence"></div>
+          </div>
+
+          <div class="advice" id="postAdvice"></div>
+        </div>
+
+        <div class="predList" id="labelContainer"></div>
+
+        <div class="foot">
+          Safety note: This project is educational and cannot confirm or rule out pneumonia. If you feel unwell or have breathing trouble, seek medical care.
+        </div>
+      </div>
+
+      <div class="previewBox">
+        <div class="placeholder" id="placeholder">
+          <b>Step 1:</b> Load the model<br/>
+          <b>Step 2:</b> Upload a chest X-ray image<br/>
+          <b>Step 3:</b> Click <b>Test Photo</b>
+        </div>
+        <img id="preview" alt="Uploaded image preview" />
       </div>
     </section>
   </main>
@@ -361,28 +658,60 @@
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
   <script>
-    // Your repo layout shows: index.html, metadata.json, model.json, weights.bin in the SAME folder.
-    // So the model URL is the current folder.
+    /********************
+     * CONFIG
+     ********************/
+    // Your repo layout: index.html, metadata.json, model.json, weights.bin in the SAME folder.
     const MODEL_URL = "./";
 
+    // Sparkles rate limit
+    let lastSparkle = 0;
+
+    /********************
+     * ELEMENTS
+     ********************/
     let model, maxPredictions;
 
     const loadBtn = document.getElementById("loadBtn");
-    const statusEl = document.getElementById("status");
     const fileInput = document.getElementById("fileInput");
+    const testBtn = document.getElementById("testBtn");
+    const statusEl = document.getElementById("status");
+
     const preview = document.getElementById("preview");
     const placeholder = document.getElementById("placeholder");
+
     const labelContainer = document.getElementById("labelContainer");
-    const topResult = document.getElementById("topResult");
+
+    const resultBanner = document.getElementById("resultBanner");
+    const resultLabel = document.getElementById("resultLabel");
+    const resultConfidence = document.getElementById("resultConfidence");
+    const postAdvice = document.getElementById("postAdvice");
+    const badgeDot = document.getElementById("badgeDot");
 
     function setStatus(msg){ statusEl.textContent = msg; }
 
-    function resetUI(){
+    function clearPredictions(){
       labelContainer.innerHTML = "";
-      topResult.textContent = "";
-      topResult.classList.remove("show");
+      resultBanner.style.display = "none";
     }
 
+    function setResultTheme(type){
+      // type: "alert" or "ok" or "neutral"
+      if(type === "alert"){
+        badgeDot.style.background = "rgba(255, 120, 120, 0.95)";
+        badgeDot.style.boxShadow = "0 0 0 4px rgba(255,120,120,0.12)";
+      } else if(type === "ok"){
+        badgeDot.style.background = "rgba(70,227,221,0.95)";
+        badgeDot.style.boxShadow = "0 0 0 4px rgba(70,227,221,0.12)";
+      } else {
+        badgeDot.style.background = "rgba(255,255,255,0.75)";
+        badgeDot.style.boxShadow = "0 0 0 4px rgba(255,255,255,0.12)";
+      }
+    }
+
+    /********************
+     * MODEL LOAD
+     ********************/
     loadBtn.addEventListener("click", async () => {
       try{
         loadBtn.disabled = true;
@@ -393,50 +722,107 @@
         fileInput.disabled = false;
       } catch (e){
         console.error(e);
-        setStatus("Failed to load model. Make sure model.json, metadata.json, and weights.bin are in the repo root.");
+        setStatus("Failed to load model. Confirm model.json, metadata.json, and weights.bin exist in the same folder as index.html.");
         loadBtn.disabled = false;
       }
     });
 
+    /********************
+     * UPLOAD PREVIEW (does NOT auto-test)
+     ********************/
     fileInput.addEventListener("change", () => {
       const file = fileInput.files && fileInput.files[0];
-      if (!file) return;
+      if(!file) return;
 
-      resetUI();
+      clearPredictions();
 
       const url = URL.createObjectURL(file);
       preview.src = url;
 
-      preview.onload = async () => {
+      preview.onload = () => {
         placeholder.style.display = "none";
-        preview.style.display = "block";
         preview.classList.add("show");
-
-        try{
-          setStatus("Predicting...");
-          await predict();
-          setStatus("Done.");
-        } catch (e){
-          console.error(e);
-          setStatus("Prediction failed.");
-        }
+        testBtn.disabled = !model; // enable only if model loaded
+        setStatus(model ? "Ready. Click Test Photo." : "Load the model first.");
       };
     });
 
-    async function predict(){
-      if (!model) return;
+    /********************
+     * TEST BUTTON
+     ********************/
+    testBtn.addEventListener("click", async () => {
+      if(!model){
+        setStatus("Load the model first.");
+        return;
+      }
+      if(!preview || !preview.src){
+        setStatus("Upload an image first.");
+        return;
+      }
 
+      try{
+        setStatus("Analyzing image...");
+        await predict();
+        setStatus("Done.");
+      } catch(e){
+        console.error(e);
+        setStatus("Prediction failed.");
+      }
+    });
+
+    async function predict(){
       const prediction = await model.predict(preview);
+
+      // Sort high -> low
       prediction.sort((a,b) => b.probability - a.probability);
 
       const best = prediction[0];
       const bestPct = Math.round(best.probability * 100);
 
-      topResult.textContent = `Top result: ${best.className} (${bestPct}%)`;
-      topResult.classList.add("show");
+      // Big result banner
+      resultBanner.style.display = "block";
+      resultLabel.textContent = `Top result: ${best.className}`;
+      resultConfidence.textContent = `Confidence: ${bestPct}%`;
 
+      // Simple logic for advice (based on class name text)
+      const name = (best.className || "").toLowerCase();
+      let theme = "neutral";
+      let adviceHTML = "";
+
+      if(name.includes("pneum") || name.includes("positive")){
+        theme = "alert";
+        adviceHTML = `
+          <b>What this means:</b> The model sees patterns that <b>might</b> be consistent with pneumonia.
+          <ul>
+            <li>This is not a diagnosis. Please <b>consult a medical professional</b> for proper interpretation.</li>
+            <li>If you have severe symptoms (trouble breathing, chest pain, blue lips, confusion), seek urgent care.</li>
+            <li>Bring the X-ray and symptoms to a clinician for the next step (exam, vitals, and confirmatory tests).</li>
+          </ul>
+        `;
+      } else if(name.includes("normal") || name.includes("negative") || name.includes("no")){
+        theme = "ok";
+        adviceHTML = `
+          <b>What this means:</b> The model did not detect strong signs of pneumonia in this image.
+          <ul>
+            <li>You can still be sick even if an image looks normal. If symptoms persist, <b>talk to a clinician</b>.</li>
+            <li>Image quality and positioning matter; a medical reading is more reliable than a single AI prediction.</li>
+            <li>Consider retesting with a clearer image if available (and compare confidence).</li>
+          </ul>
+        `;
+      } else {
+        adviceHTML = `
+          <b>What this means:</b> The model’s top label is <b>${best.className}</b>.
+          <ul>
+            <li>Interpretation depends on how the model was trained. Please <b>consult a medical professional</b> for health decisions.</li>
+          </ul>
+        `;
+      }
+
+      setResultTheme(theme);
+      postAdvice.innerHTML = adviceHTML;
+
+      // Show all predictions as cards + animated bars
       labelContainer.innerHTML = "";
-
       prediction.forEach(p => {
         const pct = Math.round(p.probability * 100);
 
@@ -444,7 +830,7 @@
         card.className = "predCard";
 
         const label = document.createElement("div");
-        label.style.fontWeight = "700";
+        label.style.fontWeight = "800";
         label.textContent = `${p.className}: ${pct}%`;
 
         const bar = document.createElement("div");
@@ -452,7 +838,6 @@
 
         const fill = document.createElement("div");
         fill.className = "fill";
-        // set after append so transitions animate nicely
         fill.style.width = "0%";
 
         bar.appendChild(fill);
@@ -460,11 +845,28 @@
         card.appendChild(bar);
         labelContainer.appendChild(card);
 
-        requestAnimationFrame(() => {
-          fill.style.width = `${pct}%`;
-        });
+        requestAnimationFrame(() => { fill.style.width = `${pct}%`; });
       });
     }
+
+    /********************
+     * CURSOR SPARKLES
+     ********************/
+    window.addEventListener("mousemove", (e) => {
+      const now = performance.now();
+      if(now - lastSparkle < 28) return; // throttle
+      lastSparkle = now;
+
+      const s = document.createElement("div");
+      s.className = "sparkle";
+      s.style.left = e.clientX + "px";
+      s.style.top = e.clientY + "px";
+      s.style.transform = `translate(-50%, -50%) scale(${0.8 + Math.random()*0.8})`;
+      document.body.appendChild(s);
+
+      // remove after animation
+      setTimeout(() => s.remove(), 750);
+    });
   </script>
 </body>
 </html>
