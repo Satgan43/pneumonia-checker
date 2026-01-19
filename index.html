@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pneumonia Checker (Teachable Machine)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; max-width: 900px; }
+    .row { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+    #preview { max-width: 360px; border: 1px solid #ddd; border-radius: 8px; padding: 8px; }
+    #results { min-width: 260px; }
+    .bar { height: 10px; background: #eee; border-radius: 999px; overflow: hidden; margin-top: 6px; }
+    .fill { height: 100%; width: 0%; background: #333; }
+    .card { border: 1px solid #eee; border-radius: 10px; padding: 12px; margin-top: 10px; }
+    .muted { color: #666; font-size: 0.95em; }
+    .big { font-size: 1.2em; font-weight: 700; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Pneumonia Image Check</h1>
+  <p class="muted">
+    Upload an X-ray image. This tool is for education only and is not medical advice.
+  </p>
+
+  <div class="card">
+    <button id="loadBtn">Load Model</button>
+    <span id="status" class="muted">Model not loaded.</span>
+  </div>
+
+  <div class="card">
+    <input id="fileInput" type="file" accept="image/*" disabled />
+  </div>
+
+  <div class="row">
+    <div>
+      <h3>Image Preview</h3>
+      <img id="preview" alt="preview will appear here" />
+    </div>
+
+    <div id="results">
+      <h3>Predictions</h3>
+      <div id="topResult" class="big"></div>
+      <div id="labelContainer"></div>
+    </div>
+  </div>
+
+  <!-- TensorFlow.js + Teachable Machine image library -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+  <script>
+    // CHANGE THIS if your model folder name is different
+    const MODEL_URL = "./my_model/";
+
+    let model, maxPredictions;
+
+    const loadBtn = document.getElementById("loadBtn");
+    const statusEl = document.getElementById("status");
+    const fileInput = document.getElementById("fileInput");
+    const previewImg = document.getElementById("preview");
+    const labelContainer = document.getElementById("labelContainer");
+    const topResult = document.getElementById("topResult");
+
+    function setStatus(msg) {
+      statusEl.textContent = msg;
+    }
+
+    function clearResults() {
+      labelContainer.innerHTML = "";
+      topResult.textContent = "";
+    }
+
+    async function loadModel() {
+      try {
+        setStatus("Loading model...");
+        const modelURL = MODEL_URL + "model.json";
+        const metadataURL = MODEL_URL + "metadata.json";
+
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        setStatus("Model loaded. Upload an image.");
+        fileInput.disabled = false;
+
+        // create result rows
+        labelContainer.innerHTML = "";
+        for (let i = 0; i < maxPredictions; i++) {
+          const row = document.createElement("div");
+          row.className = "card";
+          row.style.marginTop = "10px";
+
+          const title = document.createElement("div");
+          title.id = `label-${i}`;
+          title.style.fontWeight = "600";
+
+          const bar = document.createElement("div");
+          bar.className = "bar";
+
+          const fill = document.createElement("div");
+          fill.className = "fill";
+          fill.id = `fill-${i}`;
+
+          bar.appendChild(fill);
+          row.appendChild(title);
+          row.appendChild(bar);
+          labelContainer.appendChild(row);
+        }
+      } catch (err) {
+        console.error(err);
+        setStatus("Failed to load model. Make sure ./my_model/ contains model.json, metadata.json, weights.bin and you are running a local server.");
+      }
+    }
+
+    async function predictFromImage(imgEl) {
+      if (!model) return;
+
+      const predictions = await model.predict(imgEl);
+
+      // Sort highest probability first
+      predictions.sort((a, b) => b.probability - a.probability);
+
+      // Show top result
+      const best = predictions[0];
+      const pct = Math.round(best.probability * 100);
+      topResult.textContent = `Top result: ${best.className} (${pct}%)`;
+
+      // Show all results (in the model's original class order)
+      // For consistent mapping, use model.getClassLabels()
+      const labels = model.getClassLabels();
+
+      for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
+        const pObj = predictions.find(p => p.className === label);
+        const p = pObj ? pObj.probability : 0;
+
+        const pct2 = Math.round(p * 100);
+        const labelEl = document.getElementById(`label-${i}`);
+        const fillEl = document.getElementById(`fill-${i}`);
+
+        labelEl.textContent = `${label}: ${pct2}%`;
+        fillEl.style.width = `${pct2}%`;
+      }
+    }
+
+    loadBtn.addEventListener("click", loadModel);
+
+    fileInput.addEventListener("change", async (e) => {
+      clearResults();
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const url = URL.createObjectURL(file);
+      previewImg.src = url;
+
+      // Wait for the image element to finish loading before predicting
+      previewImg.onload = async () => {
+        try {
+          setStatus("Predicting...");
+          await predictFromImage(previewImg);
+          setStatus("Done.");
+        } catch (err) {
+          console.error(err);
+          setStatus("Prediction failed.");
+        }
+      };
+    });
+  </script>
+</body>
+</html>
