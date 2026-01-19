@@ -7,204 +7,193 @@
 
   <style>
     :root{
-      --bg1:#043a3a;
-      --bg2:#0b6b6b;
-      --bg3:#0ea5a4;
-      --text:#f2fffe;
-      --muted:rgba(242,255,254,0.78);
-      --border:rgba(255,255,255,0.22);
-      --shadow: 0 18px 60px rgba(0,0,0,0.35);
-      --radius: 18px;
-      --accent:#46e3dd;
-      --accent2:#a7fff8;
+      /* Apple-ish “liquid glass” on a clean light base */
+      --bg0:#f6f7f9;
+      --bg1:#eef1f5;
+      --ink:#0b1220;
+      --muted:rgba(11,18,32,0.70);
+
+      --glass: rgba(255,255,255,0.60);
+      --glass2: rgba(255,255,255,0.42);
+      --border: rgba(15,23,42,0.10);
+
+      --shadow: 0 18px 55px rgba(2,6,23,0.12);
+      --shadow2: 0 10px 30px rgba(2,6,23,0.10);
+      --radius: 22px;
+
+      --accent:#2563eb;    /* professional blue */
+      --accent2:#06b6d4;   /* teal */
+      --ok:#16a34a;
+      --warn:#ef4444;
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
+
+    /* IMPORTANT: keep ONE consistent background everywhere (fixes the “background change line”). */
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 700px at 15% 15%, rgba(255,255,255,0.10), transparent 55%),
-        radial-gradient(900px 700px at 90% 10%, rgba(255,255,255,0.08), transparent 55%),
-        linear-gradient(120deg, var(--bg1) 0%, var(--bg2) 35%, var(--bg3) 100%);
+      color: var(--ink);
+      background: radial-gradient(900px 500px at 15% 10%, rgba(37,99,235,0.12), transparent 60%),
+                  radial-gradient(900px 500px at 85% 20%, rgba(6,182,212,0.10), transparent 60%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      background-attachment: fixed; /* prevents banding/shift when scrolling */
       overflow-x:hidden;
     }
 
-    /* Liquid / goo background blobs */
-    .liquid-bg{ position:fixed; inset:0; z-index:-3; overflow:hidden; }
+    /* Subtle animated “liquid” blobs behind everything (no hard bands). */
+    .liquid-bg{ position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none; }
     .blob{
       position:absolute;
-      width: 620px;
-      height: 620px;
+      width: 520px; height: 520px;
       border-radius: 50%;
-      filter: url(#goo) blur(1px);
-      opacity: 0.80;
-      mix-blend-mode: soft-light;
+      filter: blur(30px);
+      opacity: 0.55;
       animation: floaty 18s ease-in-out infinite;
       transform: translate3d(0,0,0);
     }
     .blob.one{
-      left:-180px; top:-180px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.30), rgba(255,255,255,0.0) 60%),
-        linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
-      animation-duration: 19s;
+      left:-160px; top:-140px;
+      background: radial-gradient(circle at 35% 35%, rgba(37,99,235,0.42), rgba(37,99,235,0.0) 65%);
+      animation-duration: 20s;
     }
     .blob.two{
-      right:-220px; top:40px;
-      width: 720px; height: 720px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.0) 60%),
-        linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      right:-180px; top:20px;
+      width: 640px; height: 640px;
+      background: radial-gradient(circle at 35% 35%, rgba(6,182,212,0.36), rgba(6,182,212,0.0) 65%);
       animation-duration: 22s;
-      animation-delay: -6s;
+      animation-delay: -5s;
     }
     .blob.three{
-      left: 10%; bottom:-260px;
-      width: 820px; height: 820px;
-      opacity: 0.70;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.20), rgba(255,255,255,0.0) 60%),
-        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+      left: 18%; bottom:-260px;
+      width: 760px; height: 760px;
+      background: radial-gradient(circle at 35% 35%, rgba(99,102,241,0.26), rgba(99,102,241,0.0) 70%);
       animation-duration: 24s;
-      animation-delay: -10s;
+      animation-delay: -9s;
     }
     @keyframes floaty{
-      0%   { transform: translate(-10px, -8px) scale(1.02); }
-      25%  { transform: translate(24px, 16px) scale(1.08); }
-      50%  { transform: translate(-6px, 24px) scale(1.03); }
-      75%  { transform: translate(14px, -12px) scale(1.10); }
-      100% { transform: translate(-10px, -8px) scale(1.02); }
+      0%   { transform: translate(-10px,-6px) scale(1.02); }
+      25%  { transform: translate(20px,14px) scale(1.07); }
+      50%  { transform: translate(-4px,20px) scale(1.03); }
+      75%  { transform: translate(12px,-10px) scale(1.09); }
+      100% { transform: translate(-10px,-6px) scale(1.02); }
     }
 
-    /* Layout */
-    .wrap{ width:min(1120px, calc(100% - 44px)); margin: 26px auto 70px; }
-    .fadeIn{ animation: fadeUp 700ms ease-out both; }
-    @keyframes fadeUp{
-      from{ opacity:0; transform: translateY(10px); }
-      to{ opacity:1; transform: translateY(0); }
+    /* Page layout */
+    .wrap{ width:min(1140px, calc(100% - 44px)); margin: 22px auto 70px; }
+
+    /* Liquid glass card */
+    .glass{
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
 
-    /* Top bar */
+    /* Top bar (sticky) */
     .topbar{
+      position: sticky;
+      top: 12px;
+      z-index: 50;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 14px;
+      gap: 12px;
+      padding: 12px 14px;
       margin-bottom: 16px;
     }
     .brand{
-      display:flex; align-items:center; gap:12px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.20);
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      display:flex; align-items:center; gap:10px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
     }
     .logoDot{
       width: 12px; height: 12px; border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, var(--accent2), var(--accent));
-      box-shadow: 0 0 0 4px rgba(70,227,221,0.10);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), var(--accent));
+      box-shadow: 0 0 0 5px rgba(37,99,235,0.12);
     }
-    .brand h3{ margin:0; font-size: 14px; letter-spacing: 0.2px; }
     .pill{
       padding: 9px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.12);
-      color: var(--muted);
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.55);
+      color: rgba(11,18,32,0.72);
       font-size: 13px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .navLinks{ display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; }
+    .linkBtn{
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.55);
+      color: rgba(11,18,32,0.86);
+      font-size: 13px;
+      text-decoration:none;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .linkBtn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.68);
+      border-color: rgba(15,23,42,0.18);
     }
 
-    /* HERO */
+    /* Hero */
     .hero{
       display:grid;
       grid-template-columns: 1.05fr 0.95fr;
-      gap: 18px;
-      align-items: stretch;
-      margin-bottom: 18px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
     @media (max-width: 980px){ .hero{ grid-template-columns: 1fr; } }
 
-    .heroLeft{
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow:hidden;
-      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      position: relative;
-      min-height: 360px;
-    }
-    .heroLeft::before{
-      content:"";
-      position:absolute;
-      inset:-120px auto auto -120px;
-      width: 520px;
-      height: 520px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 35% 35%, rgba(70,227,221,0.24), rgba(70,227,221,0.02) 65%);
-      opacity: 0.95;
-      pointer-events:none;
-    }
-    .heroLeftInner{
-      position:relative;
-      padding: 28px 24px 22px;
-      height:100%;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap: 10px;
-    }
+    .heroLeft{ padding: 26px 24px; }
     .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      font-size: 13px;
+      display:inline-flex; align-items:center; gap: 10px;
+      color: rgba(11,18,32,0.70);
+      font-size: 12px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(242,255,254,0.90);
     }
     .kickerLine{
-      width: 34px; height: 2px;
-      background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.0));
+      width: 30px; height: 2px;
       border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), rgba(37,99,235,0));
     }
     h1{
-      margin:0;
+      margin: 10px 0 8px;
       font-size: clamp(34px, 5vw, 54px);
       line-height: 1.03;
       letter-spacing: -0.6px;
     }
     .mission{
-      margin: 6px 0 0;
-      max-width: 70ch;
+      margin: 0;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.6;
       font-size: 15px;
+      max-width: 75ch;
     }
+
     .ctaRow{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      flex-wrap: wrap;
+      display:flex; gap: 10px; flex-wrap: wrap;
       margin-top: 14px;
+      align-items:center;
     }
     .btn{
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.14);
-      color: var(--text);
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.62);
+      color: rgba(11,18,32,0.92);
       padding: 11px 14px;
       border-radius: 999px;
       cursor:pointer;
-      font-weight: 750;
+      font-weight: 800;
       transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
       display:inline-flex;
       align-items:center;
@@ -214,158 +203,136 @@
     }
     .btn:hover{
       transform: translateY(-1px);
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.32);
+      background: rgba(255,255,255,0.75);
+      border-color: rgba(15,23,42,0.18);
     }
-    .btn:active{ transform: translateY(0px) scale(0.99); }
     .btn.primary{
-      background: linear-gradient(90deg, rgba(70,227,221,0.28), rgba(255,255,255,0.10));
-      border-color: rgba(70,227,221,0.36);
+      background: linear-gradient(90deg, rgba(37,99,235,0.20), rgba(6,182,212,0.14), rgba(255,255,255,0.55));
+      border-color: rgba(37,99,235,0.22);
     }
     .btn.danger{
-      border-color: rgba(255,255,255,0.22);
-      background: rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.55);
+    }
+    .btn:disabled{
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
     }
 
-    .heroRight{
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: var(--radius);
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      background: rgba(0,0,0,0.10);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      position: relative;
-      min-height: 360px;
-    }
-    .heroPhoto{
-      position:absolute;
-      inset:0;
+    /* Hero right: “AI generated” vibe without external generation tools */
+    .heroRight{ position: relative; overflow:hidden; }
+    .heroArt{
+      position:absolute; inset:0;
       background:
-        linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.10) 55%, rgba(0,0,0,0.0)),
-        radial-gradient(1200px 600px at 70% 30%, rgba(70,227,221,0.16), transparent 60%),
-        /* AI-style illustration vibe (still a regular image URL) */
-        url("https://images.unsplash.com/photo-1580281657527-47f249e8f9bf?auto=format&fit=crop&w=1600&q=60");
-      background-size: cover;
-      background-position: center;
+        radial-gradient(900px 380px at 70% 20%, rgba(37,99,235,0.20), transparent 60%),
+        radial-gradient(700px 320px at 30% 60%, rgba(6,182,212,0.16), transparent 60%),
+        radial-gradient(420px 260px at 55% 48%, rgba(255,255,255,0.28), rgba(255,255,255,0.0) 70%),
+        linear-gradient(135deg, rgba(255,255,255,0.40), rgba(255,255,255,0.06));
+      filter: saturate(1.05);
       transform: scale(1.02);
-      filter: saturate(1.05) contrast(1.05);
     }
-    .heroRightOverlay{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
+    .heroArt::before{
+      /* subtle “clinic shapes” overlay (keeps it not-blank but clean) */
+      content:"";
+      position:absolute; inset:-2px;
       background:
-        radial-gradient(500px 280px at 80% 20%, rgba(255,255,255,0.10), rgba(255,255,255,0.0)),
-        linear-gradient(180deg, rgba(0,0,0,0.00), rgba(0,0,0,0.20));
+        linear-gradient(0deg, rgba(255,255,255,0.0), rgba(255,255,255,0.10)),
+        repeating-linear-gradient(90deg, rgba(15,23,42,0.04) 0 1px, transparent 1px 80px),
+        repeating-linear-gradient(0deg, rgba(15,23,42,0.03) 0 1px, transparent 1px 70px);
+      opacity: 0.45;
+      mix-blend-mode: overlay;
     }
-    .heroRightBadge{
-      position:absolute;
-      right: 14px;
-      bottom: 14px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(0,0,0,0.22);
-      color: rgba(242,255,254,0.90);
+    .heroRightInner{
+      position: relative;
+      padding: 18px;
+      min-height: 320px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-end;
+    }
+    .heroBadge{
+      max-width: 330px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.64);
+      color: rgba(11,18,32,0.78);
       font-size: 13px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      max-width: 280px;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
 
-    /* Big section title */
+    /* Section title */
     .sectionTitle{
-      font-size: clamp(28px, 4.5vw, 46px);
-      line-height: 1.05;
+      font-size: clamp(26px, 4.5vw, 42px);
       letter-spacing: -0.4px;
-      margin: 18px 0 12px;
+      margin: 20px 0 12px;
     }
 
-    /* Cards grid (facts / features / add-ons) */
+    /* Cards */
     .cards{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 18px;
+      gap: 14px;
+      margin-bottom: 16px;
     }
     @media (max-width: 980px){ .cards{ grid-template-columns: 1fr; } }
-    .card{
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 14px 45px rgba(0,0,0,0.28);
-      padding: 18px;
-      transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
-    }
-    .card:hover{
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.10);
-      border-color: rgba(255,255,255,0.26);
-    }
-    .card h3{ margin:0 0 8px; font-size: 22px; letter-spacing: -0.2px; }
-    .card p{ margin:0; color: var(--muted); line-height: 1.55; }
+    .card{ padding: 18px; }
+    .card h3{ margin: 0 0 8px; font-size: 18px; letter-spacing: -0.2px; }
+    .card p{ margin:0; color: var(--muted); line-height: 1.55; font-size: 14px; }
     .icon{
-      width: 40px; height: 40px;
-      border-radius: 12px;
-      background: rgba(70,227,221,0.18);
-      border: 1px solid rgba(70,227,221,0.26);
-      display:grid;
-      place-items:center;
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      border: 1px solid rgba(37,99,235,0.18);
+      background: rgba(37,99,235,0.08);
+      display:grid; place-items:center;
       margin-bottom: 10px;
+      color: rgba(37,99,235,0.90);
+      font-weight: 900;
     }
 
-    /* Two-column section blocks */
+    /* Two-column panels */
     .twoCol{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 18px;
+      gap: 14px;
+      margin-bottom: 16px;
     }
     @media (max-width: 980px){ .twoCol{ grid-template-columns: 1fr; } }
+    .panel{ padding: 18px; }
+    .panel h3{ margin:0 0 10px; font-size: 18px; }
+    .panel p{ margin:0; color: var(--muted); line-height: 1.6; font-size: 14px; }
 
-    .panel{
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: var(--radius);
-      background: rgba(0,0,0,0.12);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 18px;
-    }
-    .panel h3{ margin:0 0 8px; font-size: 22px; }
-    .panel p{ margin:0; color: var(--muted); line-height: 1.6; }
     .quote{
-      margin: 12px 0 0;
+      margin-top: 12px;
       padding: 12px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.06);
-      color: rgba(242,255,254,0.88);
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.55);
+      color: rgba(11,18,32,0.82);
       line-height: 1.55;
+      box-shadow: 0 10px 24px rgba(2,6,23,0.08);
     }
-    .quote .name{ display:block; margin-top: 8px; color: var(--muted); font-size: 13px; }
+    .quote .name{
+      display:block;
+      margin-top: 8px;
+      color: rgba(11,18,32,0.60);
+      font-size: 13px;
+    }
 
     /* Tool area */
     .toolWrap{
       display:grid;
       grid-template-columns: 1.05fr 0.95fr;
-      gap: 16px;
-      margin-top: 10px;
+      gap: 14px;
+      margin-top: 6px;
     }
     @media (max-width: 980px){ .toolWrap{ grid-template-columns:1fr; } }
 
-    .toolCard{
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: var(--radius);
-      background: rgba(0,0,0,0.12);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 18px;
-    }
+    .toolCard{ padding: 18px; }
+    .status{ color: rgba(11,18,32,0.70); font-size: 13px; }
+
     .controls{
       display:flex;
       gap: 10px;
@@ -373,74 +340,96 @@
       align-items:center;
       margin-top: 10px;
     }
-    .status{
-      color: var(--muted);
-      font-size: 13px;
-    }
     input[type="file"]{
-      border: 1px dashed rgba(255,255,255,0.28);
-      border-radius: 12px;
+      border: 1px dashed rgba(15,23,42,0.18);
+      border-radius: 14px;
       padding: 10px;
-      background: rgba(255,255,255,0.05);
-      color: rgba(242,255,254,0.85);
+      background: rgba(255,255,255,0.55);
+      color: rgba(11,18,32,0.78);
       max-width: 100%;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
     input[type="file"]::file-selector-button{
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.12);
-      color: var(--text);
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.70);
+      color: rgba(11,18,32,0.92);
       padding: 8px 10px;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor:pointer;
-      font-weight: 650;
+      font-weight: 800;
       margin-right: 10px;
     }
 
-    /* Preview */
+    /* Preview box (FIX blank screen: always show a nice info panel when empty) */
     .previewBox{
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,0.06);
-      padding: 14px;
-      display:grid;
-      place-items:center;
-      min-height: 420px;
-      overflow:hidden;
+      padding: 16px;
+      min-height: 430px;
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
     }
+    .previewPlaceholder{
+      width: 100%;
+      max-width: 460px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.62);
+      color: rgba(11,18,32,0.78);
+      box-shadow: 0 10px 24px rgba(2,6,23,0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .steps{
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+      flex-wrap: wrap;
+      color: rgba(11,18,32,0.70);
+      font-size: 14px;
+    }
+    .stepPill{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.55);
+    }
+
     #preview{
       width: 100%;
-      max-width: 420px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.20);
+      max-width: 460px;
+      border-radius: 18px;
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.60);
       display:none;
       opacity:0;
       transform: translateY(8px);
       transition: opacity 260ms ease, transform 260ms ease;
+      box-shadow: 0 14px 40px rgba(2,6,23,0.12);
     }
     #preview.show{ display:block; opacity:1; transform: translateY(0); }
-    .placeholder{
-      text-align:center;
-      color: rgba(242,255,254,0.78);
-      line-height: 1.5;
-      padding: 18px;
-    }
-    .placeholder b{ color: rgba(242,255,254,0.92); }
 
-    /* Result big banner */
+    /* Result banner (bigger + more “hero” feel) */
     .resultBanner{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.20);
-      background: rgba(0,0,0,0.12);
+      margin-top: 12px;
       padding: 14px;
-      margin-top: 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.64);
       display:none;
+      box-shadow: 0 14px 40px rgba(2,6,23,0.10);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       animation: pop 240ms ease-out both;
     }
-    @keyframes pop{
-      from{ opacity:0; transform: translateY(8px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
+    @keyframes pop{ from{opacity:0; transform: translateY(8px);} to{opacity:1; transform: translateY(0);} }
 
     .resultTop{
       display:flex;
@@ -453,58 +442,76 @@
       display:inline-flex;
       align-items:center;
       gap: 10px;
-      border-radius: 999px;
       padding: 10px 12px;
-      font-weight: 850;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.75);
+      font-weight: 900;
+      color: rgba(11,18,32,0.90);
     }
     .badgeDot{
       width: 10px; height: 10px; border-radius: 999px;
       background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(70,227,221,0.12);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
     }
     .confidence{
-      color: var(--muted);
+      color: rgba(11,18,32,0.70);
       font-size: 13px;
+      font-weight: 700;
+    }
+    .bigResult{
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.3px;
+      color: rgba(11,18,32,0.92);
     }
     .advice{
-      margin-top: 10px;
-      color: rgba(242,255,254,0.90);
-      line-height: 1.55;
+      margin-top: 8px;
+      color: rgba(11,18,32,0.80);
+      line-height: 1.6;
       font-size: 14px;
     }
-    .advice ul{ margin: 8px 0 0 18px; color: var(--muted); }
+    .advice ul{ margin: 8px 0 0 18px; color: rgba(11,18,32,0.70); }
     .advice li{ margin: 6px 0; }
 
     /* Prediction list cards */
     .predList{ margin-top: 12px; }
     .predCard{
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.06);
-      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.60);
+      border-radius: 18px;
       padding: 12px;
       margin-bottom: 10px;
-      transition: transform 200ms ease, background 200ms ease;
+      box-shadow: 0 10px 24px rgba(2,6,23,0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform 180ms ease;
     }
-    .predCard:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.08); }
-    .bar{ height: 10px; background: rgba(255,255,255,0.12); border-radius: 999px; overflow:hidden; margin-top: 8px; }
+    .predCard:hover{ transform: translateY(-1px); }
+    .bar{
+      height: 10px;
+      background: rgba(15,23,42,0.08);
+      border-radius: 999px;
+      overflow:hidden;
+      margin-top: 8px;
+    }
     .fill{
       height:100%;
       width:0%;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(70,227,221,0.75), rgba(255,255,255,0.10));
+      background: linear-gradient(90deg, rgba(37,99,235,0.75), rgba(6,182,212,0.55));
       transition: width 520ms cubic-bezier(.2,.9,.2,1);
     }
 
     .foot{
       margin-top: 14px;
-      color: var(--muted);
+      color: rgba(11,18,32,0.68);
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* Sparkles */
+    /* Sparkles (lighter on white) */
     .sparkle{
       position: fixed;
       width: 10px;
@@ -513,13 +520,12 @@
       z-index: 9999;
       transform: translate(-50%, -50%);
       animation: sparkle 700ms ease-out forwards;
-      opacity: 0.95;
+      opacity: 0.9;
     }
     .sparkle::before{
       content:"";
-      position:absolute;
-      inset:0;
-      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95), rgba(70,227,221,0.75), rgba(255,255,255,0.0) 70%);
+      position:absolute; inset:0;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95), rgba(37,99,235,0.45), rgba(255,255,255,0.0) 70%);
       border-radius: 999px;
     }
     .sparkle::after{
@@ -529,147 +535,122 @@
       width: 18px; height: 18px;
       transform: translate(-50%,-50%) rotate(45deg);
       background:
-        linear-gradient(transparent 46%, rgba(255,255,255,0.75) 50%, transparent 54%),
-        linear-gradient(90deg, transparent 46%, rgba(70,227,221,0.55) 50%, transparent 54%);
-      opacity: 0.9;
+        linear-gradient(transparent 46%, rgba(37,99,235,0.35) 50%, transparent 54%),
+        linear-gradient(90deg, transparent 46%, rgba(6,182,212,0.25) 50%, transparent 54%);
+      opacity: 0.85;
     }
     @keyframes sparkle{
       0%   { transform: translate(-50%, -50%) scale(0.9); filter: blur(0px); }
-      60%  { transform: translate(-50%, -50%) scale(1.4); filter: blur(0px); }
+      60%  { transform: translate(-50%, -50%) scale(1.35); filter: blur(0px); }
       100% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; filter: blur(1px); }
     }
-
-    html{ scroll-behavior: smooth; }
   </style>
 </head>
 
 <body>
-  <!-- Goo filter for liquid blobs -->
-  <svg width="0" height="0" style="position:absolute">
-    <filter id="goo">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
-      <feColorMatrix in="blur" mode="matrix"
-        values="
-          1 0 0 0 0
-          0 1 0 0 0
-          0 0 1 0 0
-          0 0 0 22 -8"
-        result="goo"/>
-      <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
-    </filter>
-  </svg>
-
   <div class="liquid-bg" aria-hidden="true">
     <div class="blob one"></div>
     <div class="blob two"></div>
     <div class="blob three"></div>
   </div>
 
-  <main class="wrap fadeIn">
-    <div class="topbar">
+  <main class="wrap">
+    <!-- Sticky top bar -->
+    <header class="topbar glass">
       <div class="brand">
-        <div class="logoDot"></div>
-        <h3>Intelli-Monia</h3>
+        <span class="logoDot"></span>
+        <span>Intelli-Monia</span>
       </div>
-      <div class="pill">Educational demo • Not medical advice</div>
-    </div>
 
-    <!-- HERO / opening page -->
+      <nav class="navLinks">
+        <a class="linkBtn" href="#tool">Try it</a>
+        <a class="linkBtn" href="#whattodo">What to do</a>
+        <span class="pill">Educational demo • Not medical advice</span>
+      </nav>
+    </header>
+
+    <!-- HERO -->
     <section class="hero">
-      <div class="heroLeft">
-        <div class="heroLeftInner">
-          <div class="kicker"><span class="kickerLine"></span>AI-assisted screening</div>
-          <h1>Fast, simple pneumonia screening.</h1>
-          <p class="mission">
-            <b>Mission statement:</b> Intelli-Monia uses AI to help flag possible pneumonia on chest X-rays in seconds,
-            helping patients and families get faster information and potentially reduce time spent waiting for initial answers in a doctor’s office.
-            This tool is for education only and does not diagnose medical conditions.
-          </p>
+      <div class="heroLeft glass">
+        <div class="kicker"><span class="kickerLine"></span>AI-assisted screening</div>
+        <h1>Fast, simple pneumonia screening.</h1>
+        <p class="mission">
+          <b>Mission statement:</b> Intelli-Monia uses AI to help flag possible pneumonia on chest X-rays in seconds,
+          helping patients get faster information and potentially reducing time spent waiting for initial answers in a doctor’s office.
+          This tool is for education only and does not diagnose medical conditions.
+        </p>
 
-          <div class="ctaRow">
-            <a class="btn primary" href="#tool">Check it out ↓</a>
-            <a class="btn" href="#whattodo">What to do next</a>
+        <div class="ctaRow">
+          <a class="btn primary" href="#tool">Check it out ↓</a>
+          <a class="btn" href="#whattodo">What to do next</a>
+          <span class="pill">Upload → Test → Guidance</span>
+        </div>
+      </div>
+
+      <div class="heroRight glass">
+        <div class="heroArt" aria-hidden="true"></div>
+        <div class="heroRightInner">
+          <div class="heroBadge">
+            Built with Teachable Machine + TensorFlow.js • Runs in the browser (no image storage by default)
           </div>
         </div>
       </div>
-
-      <div class="heroRight">
-        <div class="heroPhoto" role="img" aria-label="Healthcare themed photo background"></div>
-        <div class="heroRightOverlay"></div>
-        <div class="heroRightBadge">
-          Built with Teachable Machine + TensorFlow.js • Runs in the browser (no image storage by default)
-        </div>
-      </div>
     </section>
 
-    <!-- FACTS instead of blank space -->
+    <!-- FACTS / FEATURES -->
     <h2 class="sectionTitle">How Intelli-Monia Can Help</h2>
-
     <section class="cards">
-      <div class="card">
+      <div class="card glass">
         <div class="icon">⏱️</div>
-        <h3>Seconds, not hours</h3>
-        <p>
-          A preliminary result appears quickly after upload, which can help prioritize next steps sooner.
-        </p>
+        <h3>Faster first look</h3>
+        <p>Get a preliminary label in seconds after upload, which can help you know what questions to ask next.</p>
       </div>
-
-      <div class="card">
+      <div class="card glass">
         <div class="icon">📈</div>
-        <h3>Analytics-ready</h3>
-        <p>
-          Future add-ons: track average time-to-result, total screenings, and confidence trends to measure workflow impact.
-        </p>
+        <h3>Analytics ready</h3>
+        <p>Future add-on: track time-to-result, total screenings, and confidence trends to measure workflow impact.</p>
       </div>
-
-      <div class="card">
-        <div class="icon">🧪</div>
-        <h3>Continuous improvement</h3>
-        <p>
-          Future add-ons: consent-based, anonymized datasets and model versioning to improve accuracy over time.
-        </p>
+      <div class="card glass">
+        <div class="icon">🔒</div>
+        <h3>Privacy-first</h3>
+        <p>The basic demo runs locally in your browser. Future add-on: consent-based, anonymized logging.</p>
       </div>
     </section>
 
-    <!-- TESTIMONIALS -->
-    <h2 class="sectionTitle">What People Say</h2>
+    <!-- TESTIMONIALS + ADD-ONS -->
     <section class="twoCol">
-      <div class="panel">
+      <div class="panel glass">
         <h3>Testimonials (demo)</h3>
-        <p>These are sample testimonials for a school project demo.</p>
+        <p>Sample testimonials for a school project demo.</p>
 
         <div class="quote">
-          “The instant feedback helped me understand what to ask my doctor and saved me a lot of stress.”
+          “The instant feedback helped me understand what to ask my doctor and reduced stress.”
           <span class="name">— Student tester</span>
         </div>
-
         <div class="quote">
-          “It is super easy to use. The ‘What to do’ section made it clear this is not a diagnosis.”
+          “Simple to use, and the guidance section made the limitations clear.”
           <span class="name">— Parent tester</span>
         </div>
-
         <div class="quote">
-          “I like that it runs in the browser. It feels fast and simple.”
+          “Fast and clean UI. I like that it runs right in the browser.”
           <span class="name">— Community volunteer</span>
         </div>
       </div>
 
-      <div class="panel">
-        <h3>Future add-ons</h3>
-        <p>
-          Features that can be added later to strengthen the project:
-        </p>
+      <div class="panel glass">
+        <h3>Next-level features to add</h3>
+        <p>Ideas you can mention in your project report and build later:</p>
         <div class="quote">
-          <b>Clinical workflow dashboard:</b> average time-to-result, upload counts, and confidence distributions.
-          <span class="name">— Analytics idea</span>
+          <b>Results dashboard:</b> average time-to-result, uploads/day, confidence histogram.
+          <span class="name">— Analytics</span>
         </div>
         <div class="quote">
-          <b>Bias & quality checks:</b> evaluate performance by image quality and different patient groups if labels are available.
-          <span class="name">— Fairness idea</span>
+          <b>Quality checks:</b> warn on blurry/low-res images before testing.
+          <span class="name">— Data quality</span>
         </div>
         <div class="quote">
-          <b>Consent-based storage:</b> store anonymized images for retraining and improvement with clear permission.
-          <span class="name">— Privacy idea</span>
+          <b>Model versioning:</b> compare v1 vs v2 accuracy and show changelog.
+          <span class="name">— Experiment design</span>
         </div>
       </div>
     </section>
@@ -677,7 +658,7 @@
     <!-- TOOL -->
     <h2 class="sectionTitle" id="tool">Try Intelli-Monia</h2>
     <section class="toolWrap">
-      <div class="toolCard">
+      <div class="toolCard glass">
         <h3 style="margin:0 0 6px;">Upload and test an X-ray</h3>
         <div class="status" id="status">Model not loaded.</div>
 
@@ -690,13 +671,13 @@
 
         <div class="resultBanner" id="resultBanner">
           <div class="resultTop">
-            <div class="badge" id="resultBadge">
+            <div class="badge">
               <span class="badgeDot" id="badgeDot"></span>
               <span id="resultLabel">Result</span>
             </div>
             <div class="confidence" id="resultConfidence"></div>
           </div>
-
+          <div class="bigResult" id="bigResultText"></div>
           <div class="advice" id="postAdvice"></div>
         </div>
 
@@ -707,53 +688,54 @@
         </div>
       </div>
 
-      <div class="previewBox">
-        <div class="placeholder" id="placeholder">
-          <b>Step 1:</b> Load the model<br/>
-          <b>Step 2:</b> Upload a chest X-ray image<br/>
-          <b>Step 3:</b> Click <b>Test Photo</b>
+      <!-- PREVIEW (fixed: no “blank screen”) -->
+      <div class="previewBox glass">
+        <div class="previewPlaceholder" id="placeholder">
+          <b>Preview Panel</b><br/>
+          Your uploaded X-ray will appear here.
+          <ul class="steps">
+            <li class="stepPill"><b>Step 1:</b> Load model</li>
+            <li class="stepPill"><b>Step 2:</b> Upload image</li>
+            <li class="stepPill"><b>Step 3:</b> Test photo</li>
+          </ul>
         </div>
         <img id="preview" alt="Uploaded image preview" />
       </div>
     </section>
 
-    <!-- WHAT TO DO SECTION -->
+    <!-- WHAT TO DO -->
     <h2 class="sectionTitle" id="whattodo">What to do next</h2>
     <section class="twoCol">
-      <div class="panel">
+      <div class="panel glass">
         <h3>If the result suggests pneumonia</h3>
-        <p class="muted">
-          Intelli-Monia is not a diagnosis. Use this as a conversation starter with a professional.
-        </p>
+        <p>Use this as a conversation starter, not a diagnosis.</p>
         <div class="quote">
           <b>Next steps:</b>
-          <ul style="margin:10px 0 0 18px; color: var(--muted); line-height:1.55;">
-            <li>Consult a clinician for a formal read of the X-ray and a physical exam.</li>
-            <li>Share symptoms: fever, cough, shortness of breath, chest pain, fatigue.</li>
-            <li>Seek urgent care if breathing is difficult or symptoms are severe.</li>
+          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
+            <li>Consult a clinician for a formal read and physical exam.</li>
+            <li>Share symptoms (fever, cough, shortness of breath, chest pain).</li>
+            <li>Seek urgent care for severe symptoms or breathing difficulty.</li>
           </ul>
         </div>
       </div>
 
-      <div class="panel">
+      <div class="panel glass">
         <h3>If the result suggests normal</h3>
-        <p class="muted">
-          A “normal” result does not guarantee everything is fine. Symptoms matter.
-        </p>
+        <p>A normal label does not guarantee everything is fine.</p>
         <div class="quote">
           <b>Next steps:</b>
-          <ul style="margin:10px 0 0 18px; color: var(--muted); line-height:1.55;">
+          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
             <li>If symptoms persist, consult a clinician anyway.</li>
-            <li>Consider image quality: poor lighting or low resolution can reduce accuracy.</li>
             <li>Retest with a clearer image if available and compare confidence.</li>
+            <li>Remember: image quality and positioning affect predictions.</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <div class="foot" style="margin-top:18px;">
-      This is a school project demo. Any “stats” and testimonials shown are illustrative and should be replaced with real evaluation data from your experiment.
-    </div>
+    <footer class="foot" style="margin-top:18px;">
+      This is a school project demo. Replace illustrative claims/testimonials with real evaluation results from your experiment.
+    </footer>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
@@ -763,22 +745,23 @@
     // Repo layout: index.html, metadata.json, model.json, weights.bin in the SAME folder.
     const MODEL_URL = "./";
 
-    let model, maxPredictions;
+    let model;
 
-    // Buttons & inputs
+    // Elements
     const loadBtn = document.getElementById("loadBtn");
     const fileInput = document.getElementById("fileInput");
     const testBtn = document.getElementById("testBtn");
     const anotherBtn = document.getElementById("anotherBtn");
 
-    // UI
     const statusEl = document.getElementById("status");
     const preview = document.getElementById("preview");
     const placeholder = document.getElementById("placeholder");
+
     const labelContainer = document.getElementById("labelContainer");
     const resultBanner = document.getElementById("resultBanner");
     const resultLabel = document.getElementById("resultLabel");
     const resultConfidence = document.getElementById("resultConfidence");
+    const bigResultText = document.getElementById("bigResultText");
     const postAdvice = document.getElementById("postAdvice");
     const badgeDot = document.getElementById("badgeDot");
 
@@ -787,19 +770,12 @@
     function clearPredictions(){
       labelContainer.innerHTML = "";
       resultBanner.style.display = "none";
+      bigResultText.textContent = "";
     }
 
-    function setResultTheme(type){
-      if(type === "alert"){
-        badgeDot.style.background = "rgba(255, 120, 120, 0.95)";
-        badgeDot.style.boxShadow = "0 0 0 4px rgba(255,120,120,0.12)";
-      } else if(type === "ok"){
-        badgeDot.style.background = "rgba(70,227,221,0.95)";
-        badgeDot.style.boxShadow = "0 0 0 4px rgba(70,227,221,0.12)";
-      } else {
-        badgeDot.style.background = "rgba(255,255,255,0.75)";
-        badgeDot.style.boxShadow = "0 0 0 4px rgba(255,255,255,0.12)";
-      }
+    function setDot(color){
+      badgeDot.style.background = color;
+      badgeDot.style.boxShadow = "0 0 0 4px rgba(37,99,235,0.12)";
     }
 
     // Load model
@@ -808,12 +784,11 @@
         loadBtn.disabled = true;
         setStatus("Loading model...");
         model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
-        maxPredictions = model.getTotalClasses();
         setStatus("Model loaded. Upload an image.");
         fileInput.disabled = false;
       } catch (e){
         console.error(e);
-        setStatus("Failed to load model. Confirm model.json, metadata.json, and weights.bin exist in the same folder as index.html.");
+        setStatus("Failed to load model. Confirm model.json, metadata.json, and weights.bin are in the same folder as index.html.");
         loadBtn.disabled = false;
       }
     });
@@ -832,27 +807,21 @@
         placeholder.style.display = "none";
         preview.classList.add("show");
         testBtn.disabled = !model;
-        anotherBtn.disabled = true; // only enable after a test
+        anotherBtn.disabled = true;
         setStatus(model ? "Ready. Click Test Photo." : "Load the model first.");
       };
     });
 
     // Test
     testBtn.addEventListener("click", async () => {
-      if(!model){
-        setStatus("Load the model first.");
-        return;
-      }
-      if(!preview || !preview.src){
-        setStatus("Upload an image first.");
-        return;
-      }
+      if(!model){ setStatus("Load the model first."); return; }
+      if(!preview || !preview.src){ setStatus("Upload an image first."); return; }
 
       try{
         setStatus("Analyzing image...");
         await predict();
         setStatus("Done.");
-        anotherBtn.disabled = false; // enable after result
+        anotherBtn.disabled = false;
       } catch(e){
         console.error(e);
         setStatus("Prediction failed.");
@@ -861,7 +830,6 @@
 
     // Check another image (reset)
     anotherBtn.addEventListener("click", () => {
-      // reset input & UI
       fileInput.value = "";
       preview.src = "";
       preview.classList.remove("show");
@@ -872,7 +840,6 @@
       testBtn.disabled = true;
       anotherBtn.disabled = true;
       setStatus(model ? "Upload another image to continue." : "Model not loaded.");
-      // scroll back to tool section
       document.getElementById("tool").scrollIntoView({behavior:"smooth"});
     });
 
@@ -886,13 +853,13 @@
       resultBanner.style.display = "block";
       resultLabel.textContent = `Top result: ${best.className}`;
       resultConfidence.textContent = `Confidence: ${bestPct}%`;
+      bigResultText.textContent = best.className;
 
       const name = (best.className || "").toLowerCase();
-      let theme = "neutral";
       let adviceHTML = "";
 
       if(name.includes("pneum") || name.includes("positive")){
-        theme = "alert";
+        setDot(getComputedStyle(document.documentElement).getPropertyValue("--warn").trim() || "#ef4444");
         adviceHTML = `
           <b>Important:</b> This is not a diagnosis. Please <b>consult a medical professional</b>.
           <ul>
@@ -902,7 +869,7 @@
           </ul>
         `;
       } else if(name.includes("normal") || name.includes("negative") || name.includes("no")){
-        theme = "ok";
+        setDot(getComputedStyle(document.documentElement).getPropertyValue("--ok").trim() || "#16a34a");
         adviceHTML = `
           <b>Reminder:</b> A “normal” AI result does not guarantee everything is fine.
           <ul>
@@ -912,6 +879,7 @@
           </ul>
         `;
       } else {
+        setDot(getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb");
         adviceHTML = `
           <b>Result:</b> The model’s top label is <b>${best.className}</b>.
           <ul>
@@ -919,8 +887,6 @@
           </ul>
         `;
       }
-
-      setResultTheme(theme);
       postAdvice.innerHTML = adviceHTML;
 
       // Show all predictions
@@ -932,7 +898,8 @@
         card.className = "predCard";
 
         const label = document.createElement("div");
-        label.style.fontWeight = "800";
+        label.style.fontWeight = "900";
+        label.style.color = "rgba(11,18,32,0.88)";
         label.textContent = `${p.className}: ${pct}%`;
 
         const bar = document.createElement("div");
@@ -951,20 +918,20 @@
       });
     }
 
-    /********************
-     * CURSOR SPARKLES
-     ********************/
+    /* Cursor sparkle (subtle). If you want to disable, set sparkleEnabled = false. */
+    let sparkleEnabled = true;
     let lastSparkle = 0;
     window.addEventListener("mousemove", (e) => {
+      if(!sparkleEnabled) return;
       const now = performance.now();
-      if(now - lastSparkle < 28) return;
+      if(now - lastSparkle < 34) return; // throttle
       lastSparkle = now;
 
       const s = document.createElement("div");
       s.className = "sparkle";
       s.style.left = e.clientX + "px";
       s.style.top = e.clientY + "px";
-      s.style.transform = `translate(-50%, -50%) scale(${0.8 + Math.random()*0.8})`;
+      s.style.transform = `translate(-50%, -50%) scale(${0.75 + Math.random()*0.75})`;
       document.body.appendChild(s);
       setTimeout(() => s.remove(), 750);
     });
