@@ -10,11 +10,8 @@
       --bg1:#043a3a;
       --bg2:#0b6b6b;
       --bg3:#0ea5a4;
-      --ink:#0a2a2a;
       --text:#f2fffe;
       --muted:rgba(242,255,254,0.78);
-      --glass:rgba(255,255,255,0.10);
-      --glass2:rgba(255,255,255,0.14);
       --border:rgba(255,255,255,0.22);
       --shadow: 0 18px 60px rgba(0,0,0,0.35);
       --radius: 18px;
@@ -90,7 +87,7 @@
       to{ opacity:1; transform: translateY(0); }
     }
 
-    /* Top nav brand (simple) */
+    /* Top bar */
     .topbar{
       display:flex;
       align-items:center;
@@ -125,7 +122,7 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-    /* HERO like your example */
+    /* HERO */
     .hero{
       display:grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -133,9 +130,7 @@
       align-items: stretch;
       margin-bottom: 18px;
     }
-    @media (max-width: 980px){
-      .hero{ grid-template-columns: 1fr; }
-    }
+    @media (max-width: 980px){ .hero{ grid-template-columns: 1fr; } }
 
     .heroLeft{
       border: 1px solid var(--border);
@@ -156,7 +151,6 @@
       height: 520px;
       border-radius: 999px;
       background: radial-gradient(circle at 35% 35%, rgba(70,227,221,0.24), rgba(70,227,221,0.02) 65%);
-      filter: blur(2px);
       opacity: 0.95;
       pointer-events:none;
     }
@@ -169,15 +163,14 @@
       justify-content:center;
       gap: 10px;
     }
-
     .kicker{
       display:inline-flex;
       align-items:center;
       gap: 10px;
-      color: rgba(242,255,254,0.90);
       font-size: 13px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
+      color: rgba(242,255,254,0.90);
     }
     .kickerLine{
       width: 34px; height: 2px;
@@ -197,7 +190,6 @@
       line-height: 1.55;
       font-size: 15px;
     }
-
     .ctaRow{
       display:flex;
       align-items:center;
@@ -230,6 +222,10 @@
       background: linear-gradient(90deg, rgba(70,227,221,0.28), rgba(255,255,255,0.10));
       border-color: rgba(70,227,221,0.36);
     }
+    .btn.danger{
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(0,0,0,0.12);
+    }
 
     .heroRight{
       border: 1px solid rgba(255,255,255,0.18);
@@ -248,6 +244,7 @@
       background:
         linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.10) 55%, rgba(0,0,0,0.0)),
         radial-gradient(1200px 600px at 70% 30%, rgba(70,227,221,0.16), transparent 60%),
+        /* AI-style illustration vibe (still a regular image URL) */
         url("https://images.unsplash.com/photo-1580281657527-47f249e8f9bf?auto=format&fit=crop&w=1600&q=60");
       background-size: cover;
       background-position: center;
@@ -274,10 +271,10 @@
       font-size: 13px;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      max-width: 260px;
+      max-width: 280px;
     }
 
-    /* Section heading like "Lifelong Health Begins Here" */
+    /* Big section title */
     .sectionTitle{
       font-size: clamp(28px, 4.5vw, 46px);
       line-height: 1.05;
@@ -285,16 +282,14 @@
       margin: 18px 0 12px;
     }
 
-    /* Cards grid */
+    /* Cards grid (facts / features / add-ons) */
     .cards{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-bottom: 18px;
     }
-    @media (max-width: 980px){
-      .cards{ grid-template-columns: 1fr; }
-    }
+    @media (max-width: 980px){ .cards{ grid-template-columns: 1fr; } }
     .card{
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: var(--radius);
@@ -322,6 +317,37 @@
       margin-bottom: 10px;
     }
 
+    /* Two-column section blocks */
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 980px){ .twoCol{ grid-template-columns: 1fr; } }
+
+    .panel{
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--radius);
+      background: rgba(0,0,0,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 18px;
+    }
+    .panel h3{ margin:0 0 8px; font-size: 22px; }
+    .panel p{ margin:0; color: var(--muted); line-height: 1.6; }
+    .quote{
+      margin: 12px 0 0;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: rgba(242,255,254,0.88);
+      line-height: 1.55;
+    }
+    .quote .name{ display:block; margin-top: 8px; color: var(--muted); font-size: 13px; }
+
     /* Tool area */
     .toolWrap{
       display:grid;
@@ -340,7 +366,6 @@
       -webkit-backdrop-filter: blur(10px);
       padding: 18px;
     }
-
     .controls{
       display:flex;
       gap: 10px;
@@ -431,7 +456,6 @@
       border-radius: 999px;
       padding: 10px 12px;
       font-weight: 850;
-      letter-spacing: 0.2px;
       border: 1px solid rgba(255,255,255,0.22);
       background: rgba(255,255,255,0.08);
     }
@@ -446,7 +470,7 @@
     }
     .advice{
       margin-top: 10px;
-      color: rgba(242,255,254,0.88);
+      color: rgba(242,255,254,0.90);
       line-height: 1.55;
       font-size: 14px;
     }
@@ -473,7 +497,6 @@
       transition: width 520ms cubic-bezier(.2,.9,.2,1);
     }
 
-    /* Post note */
     .foot{
       margin-top: 14px;
       color: var(--muted);
@@ -516,7 +539,6 @@
       100% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; filter: blur(1px); }
     }
 
-    /* Smooth scrolling */
     html{ scroll-behavior: smooth; }
   </style>
 </head>
@@ -566,9 +588,7 @@
 
           <div class="ctaRow">
             <a class="btn primary" href="#tool">Check it out ↓</a>
-            <span class="pill" style="border-color:rgba(70,227,221,0.28); color:rgba(242,255,254,0.85);">
-              Upload → Test → Get guidance
-            </span>
+            <a class="btn" href="#whattodo">What to do next</a>
           </div>
         </div>
       </div>
@@ -582,46 +602,90 @@
       </div>
     </section>
 
-    <!-- Big section title like second screenshot -->
-    <h2 class="sectionTitle">Lifelong Health Begins Here</h2>
+    <!-- FACTS instead of blank space -->
+    <h2 class="sectionTitle">How Intelli-Monia Can Help</h2>
 
-    <!-- Feature / analytics / facts cards -->
     <section class="cards">
       <div class="card">
-        <div class="icon">⚡</div>
-        <h3>Faster first look</h3>
+        <div class="icon">⏱️</div>
+        <h3>Seconds, not hours</h3>
         <p>
-          AI can produce a preliminary result in seconds after upload, which can help prioritize who might need urgent attention first.
+          A preliminary result appears quickly after upload, which can help prioritize next steps sooner.
         </p>
       </div>
 
       <div class="card">
-        <div class="icon">📊</div>
-        <h3>Analytics & impact</h3>
+        <div class="icon">📈</div>
+        <h3>Analytics-ready</h3>
         <p>
-          Future add-ons: track average time-to-result, number of screenings completed, and model confidence trends to measure how the tool improves workflow.
+          Future add-ons: track average time-to-result, total screenings, and confidence trends to measure workflow impact.
         </p>
       </div>
 
       <div class="card">
-        <div class="icon">🔒</div>
-        <h3>Privacy-first</h3>
+        <div class="icon">🧪</div>
+        <h3>Continuous improvement</h3>
         <p>
-          Future add-ons: optional consent-based logging, anonymization, and secure storage. The basic demo runs fully in your browser.
+          Future add-ons: consent-based, anonymized datasets and model versioning to improve accuracy over time.
         </p>
       </div>
     </section>
 
-    <!-- Tool / uploader -->
-    <section id="tool" class="toolWrap">
+    <!-- TESTIMONIALS -->
+    <h2 class="sectionTitle">What People Say</h2>
+    <section class="twoCol">
+      <div class="panel">
+        <h3>Testimonials (demo)</h3>
+        <p>These are sample testimonials for a school project demo.</p>
+
+        <div class="quote">
+          “The instant feedback helped me understand what to ask my doctor and saved me a lot of stress.”
+          <span class="name">— Student tester</span>
+        </div>
+
+        <div class="quote">
+          “It is super easy to use. The ‘What to do’ section made it clear this is not a diagnosis.”
+          <span class="name">— Parent tester</span>
+        </div>
+
+        <div class="quote">
+          “I like that it runs in the browser. It feels fast and simple.”
+          <span class="name">— Community volunteer</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Future add-ons</h3>
+        <p>
+          Features that can be added later to strengthen the project:
+        </p>
+        <div class="quote">
+          <b>Clinical workflow dashboard:</b> average time-to-result, upload counts, and confidence distributions.
+          <span class="name">— Analytics idea</span>
+        </div>
+        <div class="quote">
+          <b>Bias & quality checks:</b> evaluate performance by image quality and different patient groups if labels are available.
+          <span class="name">— Fairness idea</span>
+        </div>
+        <div class="quote">
+          <b>Consent-based storage:</b> store anonymized images for retraining and improvement with clear permission.
+          <span class="name">— Privacy idea</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOL -->
+    <h2 class="sectionTitle" id="tool">Try Intelli-Monia</h2>
+    <section class="toolWrap">
       <div class="toolCard">
-        <h3 style="margin:0 0 6px;">Try Intelli-Monia</h3>
+        <h3 style="margin:0 0 6px;">Upload and test an X-ray</h3>
         <div class="status" id="status">Model not loaded.</div>
 
         <div class="controls">
           <button class="btn" id="loadBtn" type="button">Load Model</button>
           <input type="file" id="fileInput" accept="image/*" disabled />
           <button class="btn primary" id="testBtn" type="button" disabled>Test Photo</button>
+          <button class="btn danger" id="anotherBtn" type="button" disabled>Check Another Image</button>
         </div>
 
         <div class="resultBanner" id="resultBanner">
@@ -652,36 +716,66 @@
         <img id="preview" alt="Uploaded image preview" />
       </div>
     </section>
+
+    <!-- WHAT TO DO SECTION -->
+    <h2 class="sectionTitle" id="whattodo">What to do next</h2>
+    <section class="twoCol">
+      <div class="panel">
+        <h3>If the result suggests pneumonia</h3>
+        <p class="muted">
+          Intelli-Monia is not a diagnosis. Use this as a conversation starter with a professional.
+        </p>
+        <div class="quote">
+          <b>Next steps:</b>
+          <ul style="margin:10px 0 0 18px; color: var(--muted); line-height:1.55;">
+            <li>Consult a clinician for a formal read of the X-ray and a physical exam.</li>
+            <li>Share symptoms: fever, cough, shortness of breath, chest pain, fatigue.</li>
+            <li>Seek urgent care if breathing is difficult or symptoms are severe.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>If the result suggests normal</h3>
+        <p class="muted">
+          A “normal” result does not guarantee everything is fine. Symptoms matter.
+        </p>
+        <div class="quote">
+          <b>Next steps:</b>
+          <ul style="margin:10px 0 0 18px; color: var(--muted); line-height:1.55;">
+            <li>If symptoms persist, consult a clinician anyway.</li>
+            <li>Consider image quality: poor lighting or low resolution can reduce accuracy.</li>
+            <li>Retest with a clearer image if available and compare confidence.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot" style="margin-top:18px;">
+      This is a school project demo. Any “stats” and testimonials shown are illustrative and should be replaced with real evaluation data from your experiment.
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
   <script>
-    /********************
-     * CONFIG
-     ********************/
-    // Your repo layout: index.html, metadata.json, model.json, weights.bin in the SAME folder.
+    // Repo layout: index.html, metadata.json, model.json, weights.bin in the SAME folder.
     const MODEL_URL = "./";
 
-    // Sparkles rate limit
-    let lastSparkle = 0;
-
-    /********************
-     * ELEMENTS
-     ********************/
     let model, maxPredictions;
 
+    // Buttons & inputs
     const loadBtn = document.getElementById("loadBtn");
     const fileInput = document.getElementById("fileInput");
     const testBtn = document.getElementById("testBtn");
-    const statusEl = document.getElementById("status");
+    const anotherBtn = document.getElementById("anotherBtn");
 
+    // UI
+    const statusEl = document.getElementById("status");
     const preview = document.getElementById("preview");
     const placeholder = document.getElementById("placeholder");
-
     const labelContainer = document.getElementById("labelContainer");
-
     const resultBanner = document.getElementById("resultBanner");
     const resultLabel = document.getElementById("resultLabel");
     const resultConfidence = document.getElementById("resultConfidence");
@@ -696,7 +790,6 @@
     }
 
     function setResultTheme(type){
-      // type: "alert" or "ok" or "neutral"
       if(type === "alert"){
         badgeDot.style.background = "rgba(255, 120, 120, 0.95)";
         badgeDot.style.boxShadow = "0 0 0 4px rgba(255,120,120,0.12)";
@@ -709,9 +802,7 @@
       }
     }
 
-    /********************
-     * MODEL LOAD
-     ********************/
+    // Load model
     loadBtn.addEventListener("click", async () => {
       try{
         loadBtn.disabled = true;
@@ -727,9 +818,7 @@
       }
     });
 
-    /********************
-     * UPLOAD PREVIEW (does NOT auto-test)
-     ********************/
+    // Upload preview (does not auto-test)
     fileInput.addEventListener("change", () => {
       const file = fileInput.files && fileInput.files[0];
       if(!file) return;
@@ -742,14 +831,13 @@
       preview.onload = () => {
         placeholder.style.display = "none";
         preview.classList.add("show");
-        testBtn.disabled = !model; // enable only if model loaded
+        testBtn.disabled = !model;
+        anotherBtn.disabled = true; // only enable after a test
         setStatus(model ? "Ready. Click Test Photo." : "Load the model first.");
       };
     });
 
-    /********************
-     * TEST BUTTON
-     ********************/
+    // Test
     testBtn.addEventListener("click", async () => {
       if(!model){
         setStatus("Load the model first.");
@@ -764,27 +852,41 @@
         setStatus("Analyzing image...");
         await predict();
         setStatus("Done.");
+        anotherBtn.disabled = false; // enable after result
       } catch(e){
         console.error(e);
         setStatus("Prediction failed.");
       }
     });
 
+    // Check another image (reset)
+    anotherBtn.addEventListener("click", () => {
+      // reset input & UI
+      fileInput.value = "";
+      preview.src = "";
+      preview.classList.remove("show");
+      preview.style.display = "none";
+      placeholder.style.display = "block";
+      clearPredictions();
+
+      testBtn.disabled = true;
+      anotherBtn.disabled = true;
+      setStatus(model ? "Upload another image to continue." : "Model not loaded.");
+      // scroll back to tool section
+      document.getElementById("tool").scrollIntoView({behavior:"smooth"});
+    });
+
     async function predict(){
       const prediction = await model.predict(preview);
-
-      // Sort high -> low
       prediction.sort((a,b) => b.probability - a.probability);
 
       const best = prediction[0];
       const bestPct = Math.round(best.probability * 100);
 
-      // Big result banner
       resultBanner.style.display = "block";
       resultLabel.textContent = `Top result: ${best.className}`;
       resultConfidence.textContent = `Confidence: ${bestPct}%`;
 
-      // Simple logic for advice (based on class name text)
       const name = (best.className || "").toLowerCase();
       let theme = "neutral";
       let adviceHTML = "";
@@ -792,28 +894,28 @@
       if(name.includes("pneum") || name.includes("positive")){
         theme = "alert";
         adviceHTML = `
-          <b>What this means:</b> The model sees patterns that <b>might</b> be consistent with pneumonia.
+          <b>Important:</b> This is not a diagnosis. Please <b>consult a medical professional</b>.
           <ul>
-            <li>This is not a diagnosis. Please <b>consult a medical professional</b> for proper interpretation.</li>
             <li>If you have severe symptoms (trouble breathing, chest pain, blue lips, confusion), seek urgent care.</li>
-            <li>Bring the X-ray and symptoms to a clinician for the next step (exam, vitals, and confirmatory tests).</li>
+            <li>Bring the X-ray and your symptoms to a clinician for proper interpretation.</li>
+            <li>Ask about confirmatory steps (exam, vitals, and any needed tests).</li>
           </ul>
         `;
       } else if(name.includes("normal") || name.includes("negative") || name.includes("no")){
         theme = "ok";
         adviceHTML = `
-          <b>What this means:</b> The model did not detect strong signs of pneumonia in this image.
+          <b>Reminder:</b> A “normal” AI result does not guarantee everything is fine.
           <ul>
-            <li>You can still be sick even if an image looks normal. If symptoms persist, <b>talk to a clinician</b>.</li>
-            <li>Image quality and positioning matter; a medical reading is more reliable than a single AI prediction.</li>
-            <li>Consider retesting with a clearer image if available (and compare confidence).</li>
+            <li>If symptoms persist, <b>talk to a clinician</b>.</li>
+            <li>Image quality matters: low resolution or poor lighting can reduce accuracy.</li>
+            <li>You can test another image and compare confidence.</li>
           </ul>
         `;
       } else {
         adviceHTML = `
-          <b>What this means:</b> The model’s top label is <b>${best.className}</b>.
+          <b>Result:</b> The model’s top label is <b>${best.className}</b>.
           <ul>
-            <li>Interpretation depends on how the model was trained. Please <b>consult a medical professional</b> for health decisions.</li>
+            <li>Interpretation depends on training data. Please consult a clinician for health decisions.</li>
           </ul>
         `;
       }
@@ -821,7 +923,7 @@
       setResultTheme(theme);
       postAdvice.innerHTML = adviceHTML;
 
-      // Show all predictions as cards + animated bars
+      // Show all predictions
       labelContainer.innerHTML = "";
       prediction.forEach(p => {
         const pct = Math.round(p.probability * 100);
@@ -852,9 +954,10 @@
     /********************
      * CURSOR SPARKLES
      ********************/
+    let lastSparkle = 0;
     window.addEventListener("mousemove", (e) => {
       const now = performance.now();
-      if(now - lastSparkle < 28) return; // throttle
+      if(now - lastSparkle < 28) return;
       lastSparkle = now;
 
       const s = document.createElement("div");
@@ -863,8 +966,6 @@
       s.style.top = e.clientY + "px";
       s.style.transform = `translate(-50%, -50%) scale(${0.8 + Math.random()*0.8})`;
       document.body.appendChild(s);
-
-      // remove after animation
       setTimeout(() => s.remove(), 750);
     });
   </script>
