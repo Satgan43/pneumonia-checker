@@ -68,7 +68,7 @@
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), var(--accent));
       box-shadow: 0 0 0 5px rgba(37,99,235,0.12);
     }
-    .navLinks{ display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; }
+    .navLinks{ display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; align-items:center; }
     .pill{
       padding: 9px 12px;
       border-radius: 999px;
@@ -125,7 +125,6 @@
       font-size: 15px;
       max-width: 75ch;
     }
-
     .ctaRow{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items:center; }
 
     .btn{
@@ -150,7 +149,7 @@
     }
     .btn:disabled{ opacity: 0.55; cursor: not-allowed; transform:none; }
 
-    /* ✅ HERO RIGHT: NOT BLANK (built-in SVG “doctor office” style illustration) */
+    /* Hero right: built-in SVG illustration */
     .heroRight{ position: relative; overflow:hidden; }
     .heroRightInner{ position: relative; padding: 18px; min-height: 320px; display:flex; align-items:flex-end; justify-content:flex-end; }
     .heroBadge{
@@ -164,18 +163,66 @@
       box-shadow: var(--shadow2);
       backdrop-filter: blur(16px);
     }
-    .heroSvg{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      opacity: 0.95;
-    }
+    .heroSvg{ position:absolute; inset:0; width:100%; height:100%; opacity: 0.95; }
 
     .sectionTitle{
       font-size: clamp(26px, 4.5vw, 42px);
       letter-spacing: -0.4px;
-      margin: 20px 0 12px;
+      margin: 22px 0 12px;
     }
 
+    /* Feature cards */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 980px){ .cards{ grid-template-columns: 1fr; } }
+    .card{ padding: 18px; }
+    .card h3{ margin: 0 0 8px; font-size: 18px; letter-spacing: -0.2px; }
+    .card p{ margin:0; color: var(--muted); line-height: 1.55; font-size: 14px; }
+    .icon{
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      border: 1px solid rgba(37,99,235,0.18);
+      background: rgba(37,99,235,0.08);
+      display:grid; place-items:center;
+      margin-bottom: 10px;
+      color: rgba(37,99,235,0.90);
+      font-weight: 900;
+    }
+
+    /* Two-column panels */
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 980px){ .twoCol{ grid-template-columns: 1fr; } }
+    .panel{ padding: 18px; }
+    .panel h3{ margin:0 0 10px; font-size: 18px; }
+    .panel p{ margin:0; color: var(--muted); line-height: 1.6; font-size: 14px; }
+
+    .quote{
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.74);
+      color: rgba(11,18,32,0.82);
+      line-height: 1.55;
+      box-shadow: 0 10px 24px rgba(2,6,23,0.08);
+    }
+    .quote .name{
+      display:block;
+      margin-top: 8px;
+      color: rgba(11,18,32,0.60);
+      font-size: 13px;
+    }
+
+    /* Tool */
     .toolWrap{
       display:grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -318,6 +365,8 @@
       </div>
       <nav class="navLinks">
         <a class="linkBtn" href="#tool">Try it</a>
+        <a class="linkBtn" href="#stories">Stories</a>
+        <a class="linkBtn" href="#whattodo">What to do</a>
         <span class="pill">Educational demo • Not medical advice</span>
       </nav>
     </header>
@@ -338,7 +387,6 @@
       </div>
 
       <div class="heroRight glass">
-        <!-- Built-in SVG “doctor office” illustration (never breaks due to blocked images) -->
         <svg class="heroSvg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <linearGradient id="g1" x1="0" x2="1">
@@ -358,16 +406,13 @@
           <circle cx="980" cy="180" r="220" fill="url(#g2)" filter="url(#blur)"/>
           <circle cx="220" cy="620" r="260" fill="url(#g2)" filter="url(#blur)"/>
 
-          <!-- “Clinic” panels -->
           <rect x="120" y="140" rx="28" ry="28" width="520" height="420" fill="#ffffff" opacity="0.55"/>
           <rect x="680" y="240" rx="28" ry="28" width="380" height="260" fill="#ffffff" opacity="0.45"/>
 
-          <!-- simple “doctor” silhouette -->
           <circle cx="860" cy="360" r="55" fill="#0f172a" opacity="0.28"/>
           <rect x="800" y="420" width="160" height="200" rx="70" fill="#0f172a" opacity="0.20"/>
           <rect x="770" y="470" width="220" height="220" rx="40" fill="#ffffff" opacity="0.45"/>
 
-          <!-- chart lines -->
           <path d="M180 430 C240 380, 300 470, 360 420 S 500 420, 610 360"
                 fill="none" stroke="#2563eb" stroke-opacity="0.35" stroke-width="10" stroke-linecap="round"/>
           <path d="M180 470 C250 520, 310 430, 380 480 S 520 520, 610 420"
@@ -382,8 +427,66 @@
       </div>
     </section>
 
-    <h2 class="sectionTitle" id="tool">Try Intelli-Monia</h2>
+    <h2 class="sectionTitle">How Intelli-Monia Can Help</h2>
+    <section class="cards">
+      <div class="card glass">
+        <div class="icon">⏱️</div>
+        <h3>Faster first look</h3>
+        <p>Get a preliminary label in seconds after upload, which can help you know what questions to ask next.</p>
+      </div>
+      <div class="card glass">
+        <div class="icon">📈</div>
+        <h3>Analytics-ready</h3>
+        <p>Future add-on: track time-to-result, screenings/day, and confidence trends to measure workflow impact.</p>
+      </div>
+      <div class="card glass">
+        <div class="icon">🔒</div>
+        <h3>Privacy-first</h3>
+        <p>The demo runs locally in your browser. Future add-on: consent-based, anonymized logging.</p>
+      </div>
+    </section>
 
+    <!-- ✅ Testimonials + Add-ons (restored) -->
+    <h2 class="sectionTitle" id="stories">Testimonials & Future Add-ons</h2>
+    <section class="twoCol">
+      <div class="panel glass">
+        <h3>Testimonials (demo)</h3>
+        <p>Sample testimonials for a school project demo.</p>
+
+        <div class="quote">
+          “The instant feedback helped me understand what to ask my doctor and reduced stress.”
+          <span class="name">— Student tester</span>
+        </div>
+        <div class="quote">
+          “Simple to use, and the guidance section made the limitations clear.”
+          <span class="name">— Parent tester</span>
+        </div>
+        <div class="quote">
+          “Fast and clean UI. I like that it runs right in the browser.”
+          <span class="name">— Community volunteer</span>
+        </div>
+      </div>
+
+      <div class="panel glass">
+        <h3>Next-level features to add</h3>
+        <p>Ideas you can mention in your report and build later:</p>
+
+        <div class="quote">
+          <b>Results dashboard:</b> average time-to-result, uploads/day, confidence histogram.
+          <span class="name">— Analytics</span>
+        </div>
+        <div class="quote">
+          <b>Quality checks:</b> warn on blurry/low-res images before testing.
+          <span class="name">— Data quality</span>
+        </div>
+        <div class="quote">
+          <b>Model versioning:</b> compare v1 vs v2 accuracy and show a changelog.
+          <span class="name">— Experiment design</span>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="sectionTitle" id="tool">Try Intelli-Monia</h2>
     <section class="toolWrap">
       <div class="toolCard glass">
         <h3 style="margin:0 0 6px;">Upload and test an X-ray</h3>
@@ -423,14 +526,48 @@
         <img id="preview" alt="Uploaded image preview" />
       </div>
     </section>
+
+    <!-- ✅ What to do section (restored) -->
+    <h2 class="sectionTitle" id="whattodo">What to do next</h2>
+    <section class="twoCol">
+      <div class="panel glass">
+        <h3>If the result suggests pneumonia</h3>
+        <p>Use this as a conversation starter, not a diagnosis.</p>
+        <div class="quote">
+          <b>Next steps:</b>
+          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
+            <li>Consult a clinician for a formal read and physical exam.</li>
+            <li>Share symptoms (fever, cough, shortness of breath, chest pain).</li>
+            <li>Seek urgent care for severe symptoms or breathing difficulty.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel glass">
+        <h3>If the result suggests normal</h3>
+        <p>A normal label does not guarantee everything is fine.</p>
+        <div class="quote">
+          <b>Next steps:</b>
+          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
+            <li>If symptoms persist, consult a clinician anyway.</li>
+            <li>Retest with a clearer image if available and compare confidence.</li>
+            <li>Remember: image quality and positioning affect predictions.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot" style="margin-top:18px;">
+      This is a school project demo. Replace illustrative claims/testimonials with real evaluation results from your experiment.
+    </footer>
   </main>
 
-  <!-- ✅ Correct libraries (this is what fixes the model loading) -->
+  <!-- Correct libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
   <script>
-    const MODEL_URL = "./"; // model.json + metadata.json + weights.bin are in the same folder as index.html
+    const MODEL_URL = "./";
     let model;
 
     const loadBtn = document.getElementById("loadBtn");
@@ -464,20 +601,14 @@
       postAdvice.innerHTML = "";
     }
 
-    // ✅ Strong reset that always allows the next preview to show
     function resetForNextImage(){
       clearResults();
       preview.onload = null;
-
-      // Hide preview and show placeholder
       preview.classList.remove("show");
       preview.style.display = "none";
       preview.removeAttribute("src");
       preview.src = "";
-
       placeholder.style.display = "block";
-
-      // UI buttons
       testBtn.disabled = true;
       anotherBtn.disabled = true;
     }
@@ -487,7 +618,6 @@
         loadBtn.disabled = true;
         setStatus("Loading model...");
 
-        // Optional: preflight check (helps debug GitHub Pages path issues)
         const r = await fetch(MODEL_URL + "model.json", { cache: "no-store" });
         if(!r.ok) throw new Error("model.json not found at " + MODEL_URL);
 
@@ -502,7 +632,6 @@
       }
     });
 
-    // Upload preview (does not auto-test)
     fileInput.addEventListener("change", () => {
       const file = fileInput.files && fileInput.files[0];
       if(!file) return;
@@ -511,10 +640,9 @@
 
       const url = URL.createObjectURL(file);
 
-      // ✅ Force preview to re-show even after “Check Another Image”
       placeholder.style.display = "none";
       preview.style.display = "block";
-      preview.classList.remove("show"); // restart animation
+      preview.classList.remove("show");
 
       preview.onload = () => {
         preview.classList.add("show");
@@ -583,7 +711,6 @@
         `;
       }
 
-      // List all predictions
       labelContainer.innerHTML = "";
       prediction.forEach(p => {
         const pct = Math.round(p.probability * 100);
