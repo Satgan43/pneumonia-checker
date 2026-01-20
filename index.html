@@ -7,6 +7,7 @@
 
   <style>
     :root{
+      /* Apple-ish “liquid glass” on a clean light base */
       --bg0:#f6f7f9;
       --bg1:#eef1f5;
       --ink:#0b1220;
@@ -20,8 +21,8 @@
       --shadow2: 0 10px 30px rgba(2,6,23,0.10);
       --radius: 22px;
 
-      --accent:#2563eb;
-      --accent2:#06b6d4;
+      --accent:#2563eb;    /* professional blue */
+      --accent2:#06b6d4;   /* teal */
       --ok:#16a34a;
       --warn:#ef4444;
     }
@@ -30,6 +31,7 @@
     html,body{ height:100%; }
     html{ scroll-behavior:smooth; }
 
+    /* IMPORTANT: keep ONE consistent background everywhere (fixes the “background change line”). */
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -37,10 +39,11 @@
       background: radial-gradient(900px 500px at 15% 10%, rgba(37,99,235,0.12), transparent 60%),
                   radial-gradient(900px 500px at 85% 20%, rgba(6,182,212,0.10), transparent 60%),
                   linear-gradient(180deg, var(--bg0), var(--bg1));
-      background-attachment: fixed;
+      background-attachment: fixed; /* prevents banding/shift when scrolling */
       overflow-x:hidden;
     }
 
+    /* Subtle animated “liquid” blobs behind everything (no hard bands). */
     .liquid-bg{ position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none; }
     .blob{
       position:absolute;
@@ -78,8 +81,10 @@
       100% { transform: translate(-10px,-6px) scale(1.02); }
     }
 
+    /* Page layout */
     .wrap{ width:min(1140px, calc(100% - 44px)); margin: 22px auto 70px; }
 
+    /* Liquid glass card */
     .glass{
       background: linear-gradient(180deg, var(--glass), var(--glass2));
       border: 1px solid var(--border);
@@ -89,6 +94,7 @@
       -webkit-backdrop-filter: blur(16px);
     }
 
+    /* Top bar (sticky) */
     .topbar{
       position: sticky;
       top: 12px;
@@ -100,7 +106,11 @@
       padding: 12px 14px;
       margin-bottom: 16px;
     }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight: 800; letter-spacing: 0.2px; }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
     .logoDot{
       width: 12px; height: 12px; border-radius: 999px;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), var(--accent));
@@ -135,6 +145,7 @@
       border-color: rgba(15,23,42,0.18);
     }
 
+    /* Hero */
     .hero{
       display:grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -199,30 +210,37 @@
       background: linear-gradient(90deg, rgba(37,99,235,0.20), rgba(6,182,212,0.14), rgba(255,255,255,0.55));
       border-color: rgba(37,99,235,0.22);
     }
-    .btn.danger{ background: rgba(255,255,255,0.55); }
-    .btn:disabled{ opacity: 0.55; cursor: not-allowed; transform:none; }
-
-    /* ✅ FIX 1: Make top-right NOT blank by using a real photo background + overlay */
-    .heroRight{ position: relative; overflow:hidden; }
-    .heroPhoto{
-      position:absolute; inset:0;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0.60), rgba(255,255,255,0.18) 55%, rgba(255,255,255,0.10)),
-        radial-gradient(900px 420px at 70% 20%, rgba(37,99,235,0.18), transparent 60%),
-        radial-gradient(700px 360px at 30% 60%, rgba(6,182,212,0.14), transparent 60%),
-        url("https://images.unsplash.com/photo-1580281657527-47f249e8f9bf?auto=format&fit=crop&w=1600&q=60");
-      background-size: cover;
-      background-position: center;
-      transform: scale(1.03);
-      filter: saturate(1.05) contrast(1.05);
+    .btn.danger{
+      background: rgba(255,255,255,0.55);
     }
-    .heroPhoto::after{
-      content:"";
+    .btn:disabled{
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Hero right: “AI generated” vibe without external generation tools */
+    .heroRight{ position: relative; overflow:hidden; }
+    .heroArt{
       position:absolute; inset:0;
       background:
-        radial-gradient(600px 260px at 70% 15%, rgba(255,255,255,0.55), rgba(255,255,255,0.0) 70%),
-        linear-gradient(180deg, rgba(255,255,255,0.0), rgba(255,255,255,0.18));
-      pointer-events:none;
+        radial-gradient(900px 380px at 70% 20%, rgba(37,99,235,0.20), transparent 60%),
+        radial-gradient(700px 320px at 30% 60%, rgba(6,182,212,0.16), transparent 60%),
+        radial-gradient(420px 260px at 55% 48%, rgba(255,255,255,0.28), rgba(255,255,255,0.0) 70%),
+        linear-gradient(135deg, rgba(255,255,255,0.40), rgba(255,255,255,0.06));
+      filter: saturate(1.05);
+      transform: scale(1.02);
+    }
+    .heroArt::before{
+      /* subtle “clinic shapes” overlay (keeps it not-blank but clean) */
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        linear-gradient(0deg, rgba(255,255,255,0.0), rgba(255,255,255,0.10)),
+        repeating-linear-gradient(90deg, rgba(15,23,42,0.04) 0 1px, transparent 1px 80px),
+        repeating-linear-gradient(0deg, rgba(15,23,42,0.03) 0 1px, transparent 1px 70px);
+      opacity: 0.45;
+      mix-blend-mode: overlay;
     }
     .heroRightInner{
       position: relative;
@@ -233,11 +251,11 @@
       justify-content:flex-end;
     }
     .heroBadge{
-      max-width: 340px;
+      max-width: 330px;
       padding: 12px 12px;
       border-radius: 16px;
       border: 1px solid rgba(15,23,42,0.12);
-      background: rgba(255,255,255,0.70);
+      background: rgba(255,255,255,0.64);
       color: rgba(11,18,32,0.78);
       font-size: 13px;
       box-shadow: var(--shadow2);
@@ -245,12 +263,14 @@
       -webkit-backdrop-filter: blur(16px);
     }
 
+    /* Section title */
     .sectionTitle{
       font-size: clamp(26px, 4.5vw, 42px);
       letter-spacing: -0.4px;
       margin: 20px 0 12px;
     }
 
+    /* Cards */
     .cards{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -272,6 +292,7 @@
       font-weight: 900;
     }
 
+    /* Two-column panels */
     .twoCol{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -300,6 +321,7 @@
       font-size: 13px;
     }
 
+    /* Tool area */
     .toolWrap{
       display:grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -339,6 +361,7 @@
       margin-right: 10px;
     }
 
+    /* Preview box (FIX blank screen: always show a nice info panel when empty) */
     .previewBox{
       padding: 16px;
       min-height: 430px;
@@ -393,6 +416,7 @@
     }
     #preview.show{ display:block; opacity:1; transform: translateY(0); }
 
+    /* Result banner (bigger + more “hero” feel) */
     .resultBanner{
       margin-top: 12px;
       padding: 14px;
@@ -430,7 +454,11 @@
       background: var(--accent);
       box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
     }
-    .confidence{ color: rgba(11,18,32,0.70); font-size: 13px; font-weight: 700; }
+    .confidence{
+      color: rgba(11,18,32,0.70);
+      font-size: 13px;
+      font-weight: 700;
+    }
     .bigResult{
       margin-top: 10px;
       font-size: 22px;
@@ -438,10 +466,16 @@
       letter-spacing: -0.3px;
       color: rgba(11,18,32,0.92);
     }
-    .advice{ margin-top: 8px; color: rgba(11,18,32,0.80); line-height: 1.6; font-size: 14px; }
+    .advice{
+      margin-top: 8px;
+      color: rgba(11,18,32,0.80);
+      line-height: 1.6;
+      font-size: 14px;
+    }
     .advice ul{ margin: 8px 0 0 18px; color: rgba(11,18,32,0.70); }
     .advice li{ margin: 6px 0; }
 
+    /* Prediction list cards */
     .predList{ margin-top: 12px; }
     .predCard{
       border: 1px solid rgba(15,23,42,0.10);
@@ -455,7 +489,13 @@
       transition: transform 180ms ease;
     }
     .predCard:hover{ transform: translateY(-1px); }
-    .bar{ height: 10px; background: rgba(15,23,42,0.08); border-radius: 999px; overflow:hidden; margin-top: 8px; }
+    .bar{
+      height: 10px;
+      background: rgba(15,23,42,0.08);
+      border-radius: 999px;
+      overflow:hidden;
+      margin-top: 8px;
+    }
     .fill{
       height:100%;
       width:0%;
@@ -464,8 +504,14 @@
       transition: width 520ms cubic-bezier(.2,.9,.2,1);
     }
 
-    .foot{ margin-top: 14px; color: rgba(11,18,32,0.68); font-size: 13px; line-height: 1.55; }
+    .foot{
+      margin-top: 14px;
+      color: rgba(11,18,32,0.68);
+      font-size: 13px;
+      line-height: 1.55;
+    }
 
+    /* Sparkles (lighter on white) */
     .sparkle{
       position: fixed;
       width: 10px;
@@ -509,6 +555,7 @@
   </div>
 
   <main class="wrap">
+    <!-- Sticky top bar -->
     <header class="topbar glass">
       <div class="brand">
         <span class="logoDot"></span>
@@ -522,6 +569,7 @@
       </nav>
     </header>
 
+    <!-- HERO -->
     <section class="hero">
       <div class="heroLeft glass">
         <div class="kicker"><span class="kickerLine"></span>AI-assisted screening</div>
@@ -540,7 +588,7 @@
       </div>
 
       <div class="heroRight glass">
-        <div class="heroPhoto" aria-hidden="true"></div>
+        <div class="heroArt" aria-hidden="true"></div>
         <div class="heroRightInner">
           <div class="heroBadge">
             Built with Teachable Machine + TensorFlow.js • Runs in the browser (no image storage by default)
@@ -549,6 +597,7 @@
       </div>
     </section>
 
+    <!-- FACTS / FEATURES -->
     <h2 class="sectionTitle">How Intelli-Monia Can Help</h2>
     <section class="cards">
       <div class="card glass">
@@ -568,6 +617,7 @@
       </div>
     </section>
 
+    <!-- TESTIMONIALS + ADD-ONS -->
     <section class="twoCol">
       <div class="panel glass">
         <h3>Testimonials (demo)</h3>
@@ -605,6 +655,7 @@
       </div>
     </section>
 
+    <!-- TOOL -->
     <h2 class="sectionTitle" id="tool">Try Intelli-Monia</h2>
     <section class="toolWrap">
       <div class="toolCard glass">
@@ -637,6 +688,7 @@
         </div>
       </div>
 
+      <!-- PREVIEW (fixed: no “blank screen”) -->
       <div class="previewBox glass">
         <div class="previewPlaceholder" id="placeholder">
           <b>Preview Panel</b><br/>
@@ -651,6 +703,7 @@
       </div>
     </section>
 
+    <!-- WHAT TO DO -->
     <h2 class="sectionTitle" id="whattodo">What to do next</h2>
     <section class="twoCol">
       <div class="panel glass">
@@ -686,12 +739,15 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/tmImage.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
   <script>
+    // Repo layout: index.html, metadata.json, model.json, weights.bin in the SAME folder.
     const MODEL_URL = "./";
+
     let model;
 
+    // Elements
     const loadBtn = document.getElementById("loadBtn");
     const fileInput = document.getElementById("fileInput");
     const testBtn = document.getElementById("testBtn");
@@ -722,6 +778,7 @@
       badgeDot.style.boxShadow = "0 0 0 4px rgba(37,99,235,0.12)";
     }
 
+    // Load model
     loadBtn.addEventListener("click", async () => {
       try{
         loadBtn.disabled = true;
@@ -736,38 +793,26 @@
       }
     });
 
-    // ✅ FIX 2: Make “Check Another Image” work (preview shows again)
-    function resetPreviewUI(){
-      // fully reset image element so onload triggers properly next time
-      preview.classList.remove("show");
-      preview.style.display = "none";
-      preview.removeAttribute("src");
-      preview.src = ""; // belt and suspenders
-      placeholder.style.display = "block";
-      clearPredictions();
-    }
-
+    // Upload preview (does not auto-test)
     fileInput.addEventListener("change", () => {
       const file = fileInput.files && fileInput.files[0];
       if(!file) return;
 
       clearPredictions();
 
-      // show preview again even after a reset
       const url = URL.createObjectURL(file);
+      preview.src = url;
+
       preview.onload = () => {
         placeholder.style.display = "none";
-        preview.style.display = "block";
         preview.classList.add("show");
         testBtn.disabled = !model;
         anotherBtn.disabled = true;
         setStatus(model ? "Ready. Click Test Photo." : "Load the model first.");
-        // revoke URL after load
-        URL.revokeObjectURL(url);
       };
-      preview.src = url;
     });
 
+    // Test
     testBtn.addEventListener("click", async () => {
       if(!model){ setStatus("Load the model first."); return; }
       if(!preview || !preview.src){ setStatus("Upload an image first."); return; }
@@ -783,10 +828,15 @@
       }
     });
 
+    // Check another image (reset)
     anotherBtn.addEventListener("click", () => {
-      // reset input and UI
       fileInput.value = "";
-      resetPreviewUI();
+      preview.src = "";
+      preview.classList.remove("show");
+      preview.style.display = "none";
+      placeholder.style.display = "block";
+      clearPredictions();
+
       testBtn.disabled = true;
       anotherBtn.disabled = true;
       setStatus(model ? "Upload another image to continue." : "Model not loaded.");
@@ -868,11 +918,13 @@
       });
     }
 
-    // Sparkles
+    /* Cursor sparkle (subtle). If you want to disable, set sparkleEnabled = false. */
+    let sparkleEnabled = true;
     let lastSparkle = 0;
     window.addEventListener("mousemove", (e) => {
+      if(!sparkleEnabled) return;
       const now = performance.now();
-      if(now - lastSparkle < 34) return;
+      if(now - lastSparkle < 34) return; // throttle
       lastSparkle = now;
 
       const s = document.createElement("div");
