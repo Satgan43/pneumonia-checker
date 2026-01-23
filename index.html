@@ -12,8 +12,8 @@
       --ink:#0b1220;
       --muted:rgba(11,18,32,0.70);
 
-      --glass: rgba(255,255,255,0.65);
-      --glass2: rgba(255,255,255,0.45);
+      --glass: rgba(255,255,255,0.68);
+      --glass2: rgba(255,255,255,0.42);
       --border: rgba(15,23,42,0.12);
 
       --shadow: 0 18px 55px rgba(2,6,23,0.10);
@@ -24,10 +24,14 @@
       --accent2:#06b6d4;
       --ok:#16a34a;
       --warn:#ef4444;
+      --amber:#f59e0b;
+
+      --focus: rgba(37,99,235,0.35);
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -40,8 +44,13 @@
       overflow-x:hidden;
     }
 
-    .wrap{ width:min(1140px, calc(100% - 44px)); margin: 22px auto 70px; }
+    :focus-visible{
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 14px;
+    }
 
+    .wrap{ width:min(1140px, calc(100% - 44px)); margin: 22px auto 70px; }
     .glass{
       background: linear-gradient(180deg, var(--glass), var(--glass2));
       border: 1px solid var(--border);
@@ -51,6 +60,11 @@
       -webkit-backdrop-filter: blur(16px);
     }
 
+    /* Reveal on scroll */
+    .reveal{ opacity:0; transform: translateY(10px); transition: opacity 520ms ease, transform 520ms ease; }
+    .reveal.in{ opacity:1; transform: translateY(0); }
+
+    /* Topbar */
     .topbar{
       position: sticky;
       top: 12px;
@@ -62,13 +76,14 @@
       padding: 12px 14px;
       margin-bottom: 16px;
     }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight: 800; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight: 900; letter-spacing:-0.2px; }
     .logoDot{
       width: 12px; height: 12px; border-radius: 999px;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), var(--accent));
       box-shadow: 0 0 0 5px rgba(37,99,235,0.12);
     }
     .navLinks{ display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; align-items:center; }
+
     .pill{
       padding: 9px 12px;
       border-radius: 999px;
@@ -77,6 +92,7 @@
       color: rgba(11,18,32,0.72);
       font-size: 13px;
       backdrop-filter: blur(14px);
+      white-space: nowrap;
     }
     .linkBtn{
       padding: 9px 12px;
@@ -91,6 +107,63 @@
     }
     .linkBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.78); border-color: rgba(15,23,42,0.18); }
 
+    /* Toast */
+    .toast{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.75);
+      font-weight: 900;
+      color: rgba(11,18,32,0.82);
+      box-shadow: 0 10px 24px rgba(2,6,23,0.08);
+      backdrop-filter: blur(14px);
+      max-width: 100%;
+    }
+    .toastText{ font-size:13px; font-weight:900; }
+    .spin{
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(15,23,42,0.18);
+      border-top-color: rgba(37,99,235,0.9);
+      animation: spin 0.8s linear infinite;
+      display:none;
+      flex: 0 0 auto;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg);} }
+
+    /* Buttons */
+    .btn{
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.70);
+      color: rgba(11,18,32,0.92);
+      padding: 11px 14px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 900;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.82);
+      border-color: rgba(15,23,42,0.18);
+      box-shadow: 0 12px 28px rgba(2,6,23,0.08);
+    }
+    .btn:active{ transform: translateY(0px) scale(0.985); }
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(37,99,235,0.20), rgba(6,182,212,0.14), rgba(255,255,255,0.65));
+      border-color: rgba(37,99,235,0.22);
+    }
+    .btn:disabled{ opacity: 0.55; cursor: not-allowed; transform:none; box-shadow:none; }
+
+    /* Hero */
     .hero{
       display:grid;
       grid-template-columns: 1.05fr 0.95fr;
@@ -127,31 +200,8 @@
     }
     .ctaRow{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items:center; }
 
-    .btn{
-      border: 1px solid rgba(15,23,42,0.12);
-      background: rgba(255,255,255,0.70);
-      color: rgba(11,18,32,0.92);
-      padding: 11px 14px;
-      border-radius: 999px;
-      cursor:pointer;
-      font-weight: 800;
-      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      text-decoration:none;
-      user-select:none;
-    }
-    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.82); border-color: rgba(15,23,42,0.18); }
-    .btn.primary{
-      background: linear-gradient(90deg, rgba(37,99,235,0.20), rgba(6,182,212,0.14), rgba(255,255,255,0.65));
-      border-color: rgba(37,99,235,0.22);
-    }
-    .btn:disabled{ opacity: 0.55; cursor: not-allowed; transform:none; }
-
-    /* Hero right: built-in SVG illustration */
     .heroRight{ position: relative; overflow:hidden; }
-    .heroRightInner{ position: relative; padding: 18px; min-height: 320px; display:flex; align-items:flex-end; justify-content:flex-end; }
+    .heroRightInner{ position: relative; padding: 18px; min-height: 320px; display:flex; flex-direction:column; justify-content:space-between; }
     .heroBadge{
       max-width: 360px;
       padding: 12px 12px;
@@ -162,16 +212,31 @@
       font-size: 13px;
       box-shadow: var(--shadow2);
       backdrop-filter: blur(16px);
+      align-self:flex-end;
     }
     .heroSvg{ position:absolute; inset:0; width:100%; height:100%; opacity: 0.95; }
 
+    /* Sections */
     .sectionTitle{
       font-size: clamp(26px, 4.5vw, 42px);
       letter-spacing: -0.4px;
       margin: 22px 0 12px;
     }
 
-    /* Feature cards */
+    /* Stat cards */
+    .stats{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 980px){ .stats{ grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 520px){ .stats{ grid-template-columns: 1fr; } }
+    .stat{ padding: 14px; }
+    .stat .num{ font-size: 22px; font-weight: 950; letter-spacing:-0.3px; }
+    .stat .lbl{ color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.35; }
+
+    /* Cards */
     .cards{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -179,7 +244,9 @@
       margin-bottom: 16px;
     }
     @media (max-width: 980px){ .cards{ grid-template-columns: 1fr; } }
-    .card{ padding: 18px; }
+
+    .card{ padding: 18px; transition: transform 180ms ease, box-shadow 180ms ease; }
+    .card:hover{ transform: translateY(-2px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
     .card h3{ margin: 0 0 8px; font-size: 18px; letter-spacing: -0.2px; }
     .card p{ margin:0; color: var(--muted); line-height: 1.55; font-size: 14px; }
     .icon{
@@ -190,7 +257,7 @@
       display:grid; place-items:center;
       margin-bottom: 10px;
       color: rgba(37,99,235,0.90);
-      font-weight: 900;
+      font-weight: 950;
     }
 
     /* Two-column panels */
@@ -201,7 +268,8 @@
       margin-bottom: 16px;
     }
     @media (max-width: 980px){ .twoCol{ grid-template-columns: 1fr; } }
-    .panel{ padding: 18px; }
+    .panel{ padding: 18px; transition: transform 180ms ease, box-shadow 180ms ease; }
+    .panel:hover{ transform: translateY(-2px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
     .panel h3{ margin:0 0 10px; font-size: 18px; }
     .panel p{ margin:0; color: var(--muted); line-height: 1.6; font-size: 14px; }
 
@@ -222,6 +290,17 @@
       font-size: 13px;
     }
 
+    /* Details */
+    details.glass{ padding: 16px; border-radius: 18px; margin-bottom: 12px; }
+    details summary{
+      cursor:pointer;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+      list-style:none;
+    }
+    details summary::-webkit-details-marker{ display:none; }
+    details .detailBody{ margin-top: 10px; color: var(--muted); line-height: 1.6; font-size: 14px; }
+
     /* Tool */
     .toolWrap{
       display:grid;
@@ -230,9 +309,8 @@
       margin-top: 6px;
     }
     @media (max-width: 980px){ .toolWrap{ grid-template-columns:1fr; } }
-
-    .toolCard{ padding: 18px; }
-    .status{ color: rgba(11,18,32,0.70); font-size: 13px; }
+    .toolCard{ padding: 18px; transition: transform 180ms ease, box-shadow 180ms ease; }
+    .toolCard:hover{ transform: translateY(-2px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
 
     .controls{
       display:flex;
@@ -242,26 +320,64 @@
       margin-top: 10px;
     }
 
-    input[type="file"]{
-      border: 1px dashed rgba(15,23,42,0.18);
-      border-radius: 14px;
-      padding: 10px;
-      background: rgba(255,255,255,0.70);
-      color: rgba(11,18,32,0.78);
-      max-width: 100%;
-      backdrop-filter: blur(14px);
+    /* Stepper */
+    .steps{ display:flex; gap:10px; flex-wrap:wrap; margin: 12px 0 6px; }
+    .step{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.55);
+      color: rgba(11,18,32,0.70);
+      display:flex; align-items:center; gap:10px;
+      font-weight: 950;
     }
-    input[type="file"]::file-selector-button{
-      border: 1px solid rgba(15,23,42,0.12);
-      background: rgba(255,255,255,0.85);
+    .step .num{
+      width:24px;height:24px;border-radius:999px;display:grid;place-items:center;
+      background: rgba(15,23,42,0.08);
+      font-size:13px;
+      font-weight: 950;
+    }
+    .step.active{
+      background: rgba(37,99,235,0.10);
+      border-color: rgba(37,99,235,0.22);
       color: rgba(11,18,32,0.92);
-      padding: 8px 10px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-weight: 800;
-      margin-right: 10px;
     }
+    .step.done{ opacity: 0.95; }
+    .step.done .num{ background: rgba(22,163,74,0.14); }
 
+    /* Dropzone */
+    .dropzone{
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px dashed rgba(15,23,42,0.18);
+      background: rgba(255,255,255,0.62);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      box-shadow: 0 10px 24px rgba(2,6,23,0.06);
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+      cursor: pointer;
+    }
+    .dropzone:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.75); border-color: rgba(37,99,235,0.28); }
+    .dropzone.drag{ background: rgba(37,99,235,0.10); border-color: rgba(37,99,235,0.38); }
+    .dzLeft b{ display:block; font-size: 14px; letter-spacing:-0.1px; }
+    .dzLeft span{ color: var(--muted); font-size: 13px; }
+    .dzRight{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .tag{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.72);
+      color: rgba(11,18,32,0.72);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .fileHidden{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+    /* Preview */
     .previewBox{
       padding: 16px;
       min-height: 430px;
@@ -271,8 +387,8 @@
       justify-content:center;
       align-items:center;
       text-align:center;
+      position: relative;
     }
-
     .previewPlaceholder{
       width: 100%;
       max-width: 460px;
@@ -284,7 +400,6 @@
       box-shadow: 0 10px 24px rgba(2,6,23,0.08);
       backdrop-filter: blur(16px);
     }
-
     #preview{
       width: 100%;
       max-width: 460px;
@@ -299,6 +414,7 @@
     }
     #preview.show{ display:block; opacity:1; transform: translateY(0); }
 
+    /* Result */
     .resultBanner{
       margin-top: 12px;
       padding: 14px;
@@ -312,6 +428,16 @@
     }
     @keyframes pop{ from{opacity:0; transform: translateY(8px);} to{opacity:1; transform: translateY(0);} }
 
+    .resultBanner.positive{
+      border-color: rgba(239,68,68,0.22);
+      background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(239,68,68,0.06));
+    }
+    .resultBanner.negative{
+      border-color: rgba(22,163,74,0.20);
+      background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(22,163,74,0.06));
+    }
+
+    .badgeRow{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; }
     .badge{
       display:inline-flex;
       align-items:center;
@@ -320,7 +446,7 @@
       border-radius: 999px;
       border: 1px solid rgba(15,23,42,0.10);
       background: rgba(255,255,255,0.90);
-      font-weight: 900;
+      font-weight: 950;
       color: rgba(11,18,32,0.90);
     }
     .badgeDot{
@@ -328,12 +454,24 @@
       background: var(--accent);
       box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
     }
-    .confidence{ color: rgba(11,18,32,0.70); font-size: 13px; font-weight: 700; }
-    .bigResult{ margin-top: 10px; font-size: 22px; font-weight: 950; letter-spacing: -0.3px; }
-    .advice{ margin-top: 8px; color: rgba(11,18,32,0.80); line-height: 1.6; font-size: 14px; }
+    .chip{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.86);
+      font-weight: 950;
+      color: rgba(11,18,32,0.78);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .bigResult{ margin-top: 10px; font-size: 24px; font-weight: 1000; letter-spacing: -0.4px; }
+    .subResult{ margin-top: 6px; color: rgba(11,18,32,0.72); font-size: 13px; font-weight: 900; }
+    .advice{ margin-top: 10px; color: rgba(11,18,32,0.82); line-height: 1.6; font-size: 14px; }
     .advice ul{ margin: 8px 0 0 18px; color: rgba(11,18,32,0.70); }
     .advice li{ margin: 6px 0; }
 
+    /* Predictions list */
     .predCard{
       border: 1px solid rgba(15,23,42,0.10);
       background: rgba(255,255,255,0.70);
@@ -353,12 +491,35 @@
     }
 
     .foot{ margin-top: 14px; color: rgba(11,18,32,0.68); font-size: 13px; line-height: 1.55; }
+
+    /* Sparkles */
+    .sparkle{
+      position: fixed;
+      pointer-events:none;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(37,99,235,0.85));
+      box-shadow: 0 0 14px rgba(37,99,235,0.35);
+      transform: translate(-50%,-50%);
+      animation: sparkle 520ms ease-out forwards;
+      opacity: 0.95;
+      z-index: 9999;
+      mix-blend-mode: multiply;
+    }
+    @keyframes sparkle{
+      0%{ transform: translate(-50%,-50%) scale(1); opacity: 0.95; }
+      100%{ transform: translate(-50%,-80%) scale(0.2); opacity: 0; }
+    }
+
+    /* Hide the native file input but keep it accessible */
+    input[type="file"]{ display:none; }
   </style>
 </head>
 
 <body>
   <main class="wrap">
-    <header class="topbar glass">
+    <header class="topbar glass reveal">
       <div class="brand">
         <span class="logoDot"></span>
         <span>Intelli-Monia</span>
@@ -372,7 +533,7 @@
     </header>
 
     <section class="hero">
-      <div class="heroLeft glass">
+      <div class="heroLeft glass reveal">
         <div class="kicker"><span class="kickerLine"></span>AI-assisted screening</div>
         <h1>Welcome to Intelli-Monia.</h1>
         <p class="mission">
@@ -380,13 +541,14 @@
           helping patients get faster information and potentially reducing time spent waiting for initial answers at a doctor’s office.
           This tool is educational only and does not diagnose medical conditions.
         </p>
+
         <div class="ctaRow">
           <a class="btn primary" href="#tool">Check it out ↓</a>
           <span class="pill">Upload → Test → Guidance</span>
         </div>
       </div>
 
-      <div class="heroRight glass">
+      <div class="heroRight glass reveal">
         <svg class="heroSvg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <linearGradient id="g1" x1="0" x2="1">
@@ -420,6 +582,25 @@
         </svg>
 
         <div class="heroRightInner">
+          <div class="stats" style="margin:0;">
+            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+              <div class="num">Browser</div>
+              <div class="lbl">Runs locally (no server required for the demo).</div>
+            </div>
+            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+              <div class="num">Private</div>
+              <div class="lbl">No image storage by default in this page.</div>
+            </div>
+            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+              <div class="num">Fast</div>
+              <div class="lbl">Instant inference after upload (device dependent).</div>
+            </div>
+            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+              <div class="num">Demo</div>
+              <div class="lbl">Educational only, not medical advice.</div>
+            </div>
+          </div>
+
           <div class="heroBadge">
             Built with Teachable Machine + TensorFlow.js • Runs in the browser (no image storage by default)
           </div>
@@ -427,29 +608,42 @@
       </div>
     </section>
 
-    <h2 class="sectionTitle">How Intelli-Monia Can Help</h2>
+    <h2 class="sectionTitle reveal">How Intelli-Monia Can Help</h2>
     <section class="cards">
-      <div class="card glass">
+      <div class="card glass reveal">
         <div class="icon">⏱️</div>
         <h3>Faster first look</h3>
         <p>Get a preliminary label in seconds after upload, which can help you know what questions to ask next.</p>
       </div>
-      <div class="card glass">
+      <div class="card glass reveal">
         <div class="icon">📈</div>
         <h3>Analytics-ready</h3>
         <p>Future add-on: track time-to-result, screenings/day, and confidence trends to measure workflow impact.</p>
       </div>
-      <div class="card glass">
+      <div class="card glass reveal">
         <div class="icon">🔒</div>
         <h3>Privacy-first</h3>
         <p>The demo runs locally in your browser. Future add-on: consent-based, anonymized logging.</p>
       </div>
     </section>
 
-    <!-- ✅ Testimonials + Add-ons (restored) -->
-    <h2 class="sectionTitle" id="stories">Testimonials & Future Add-ons</h2>
+    <details class="glass reveal">
+      <summary>How it works (simple explanation)</summary>
+      <div class="detailBody">
+        Intelli-Monia loads a Teachable Machine image model in your browser using TensorFlow.js. When you upload an X-ray, the model outputs probabilities for each class. This does not diagnose illness; it only estimates which label the image looks most similar to based on training.
+      </div>
+    </details>
+
+    <details class="glass reveal">
+      <summary>Limitations (important)</summary>
+      <div class="detailBody">
+        Predictions depend on training data, image quality, and how similar your image is to what the model saw. Even if the result says “normal,” symptoms may still require medical evaluation. This tool is educational only.
+      </div>
+    </details>
+
+    <h2 class="sectionTitle reveal" id="stories">Testimonials & Future Add-ons</h2>
     <section class="twoCol">
-      <div class="panel glass">
+      <div class="panel glass reveal">
         <h3>Testimonials (demo)</h3>
         <p>Sample testimonials for a school project demo.</p>
 
@@ -467,7 +661,7 @@
         </div>
       </div>
 
-      <div class="panel glass">
+      <div class="panel glass reveal">
         <h3>Next-level features to add</h3>
         <p>Ideas you can mention in your report and build later:</p>
 
@@ -486,28 +680,56 @@
       </div>
     </section>
 
-    <h2 class="sectionTitle" id="tool">Try Intelli-Monia</h2>
+    <h2 class="sectionTitle reveal" id="tool">Try Intelli-Monia</h2>
+
     <section class="toolWrap">
-      <div class="toolCard glass">
-        <h3 style="margin:0 0 6px;">Upload and test an X-ray</h3>
-        <div class="status" id="status">Model not loaded.</div>
+      <div class="toolCard glass reveal">
+        <h3 style="margin:0 0 8px;">Upload and test an X-ray</h3>
+
+        <div class="toast" aria-live="polite" role="status">
+          <span class="spin" id="spinner"></span>
+          <span class="toastText" id="toastText">Model not loaded.</span>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step active" id="s1"><span class="num">1</span> Load model</div>
+          <div class="step" id="s2"><span class="num">2</span> Upload image</div>
+          <div class="step" id="s3"><span class="num">3</span> Test photo</div>
+        </div>
 
         <div class="controls">
           <button class="btn" id="loadBtn" type="button">Load Model</button>
-          <input type="file" id="fileInput" accept="image/*" disabled />
           <button class="btn primary" id="testBtn" type="button" disabled>Test Photo</button>
           <button class="btn" id="anotherBtn" type="button" disabled>Check Another Image</button>
         </div>
 
-        <div class="resultBanner" id="resultBanner">
-          <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center;">
+        <!-- Accessible hidden input -->
+        <label class="fileHidden" for="fileInput">Upload X-ray image</label>
+        <input type="file" id="fileInput" accept="image/*" />
+
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload an image by clicking or dragging and dropping">
+          <div class="dzLeft">
+            <b>Upload your X-ray</b>
+            <span>Click here or drag and drop an image. Recommended: clear chest X-ray.</span>
+          </div>
+          <div class="dzRight">
+            <span class="tag">JPG / PNG</span>
+            <span class="tag">No upload storage</span>
+            <span class="tag">Educational demo</span>
+          </div>
+        </div>
+
+        <div class="resultBanner" id="resultBanner" aria-live="polite">
+          <div class="badgeRow">
             <div class="badge">
               <span class="badgeDot" id="badgeDot"></span>
               <span id="resultLabel">Result</span>
             </div>
-            <div class="confidence" id="resultConfidence"></div>
+            <div class="chip" id="resultConfidence">Confidence: —</div>
           </div>
+
           <div class="bigResult" id="bigResultText"></div>
+          <div class="subResult" id="subResultText"></div>
           <div class="advice" id="postAdvice"></div>
         </div>
 
@@ -518,19 +740,18 @@
         </div>
       </div>
 
-      <div class="previewBox glass">
+      <div class="previewBox glass reveal">
         <div class="previewPlaceholder" id="placeholder">
           <b>Preview Panel</b><br/>
-          Your uploaded X-ray will appear here.
+          Your uploaded image will appear here.
         </div>
         <img id="preview" alt="Uploaded image preview" />
       </div>
     </section>
 
-    <!-- ✅ What to do section (restored) -->
-    <h2 class="sectionTitle" id="whattodo">What to do next</h2>
+    <h2 class="sectionTitle reveal" id="whattodo">What to do next</h2>
     <section class="twoCol">
-      <div class="panel glass">
+      <div class="panel glass reveal">
         <h3>If the result suggests pneumonia</h3>
         <p>Use this as a conversation starter, not a diagnosis.</p>
         <div class="quote">
@@ -543,7 +764,7 @@
         </div>
       </div>
 
-      <div class="panel glass">
+      <div class="panel glass reveal">
         <h3>If the result suggests normal</h3>
         <p>A normal label does not guarantee everything is fine.</p>
         <div class="quote">
@@ -557,7 +778,7 @@
       </div>
     </section>
 
-    <footer class="foot" style="margin-top:18px;">
+    <footer class="foot reveal" style="margin-top:18px;">
       This is a school project demo. Replace illustrative claims/testimonials with real evaluation results from your experiment.
     </footer>
   </main>
@@ -575,7 +796,7 @@
     const testBtn = document.getElementById("testBtn");
     const anotherBtn = document.getElementById("anotherBtn");
 
-    const statusEl = document.getElementById("status");
+    const dropzone = document.getElementById("dropzone");
     const preview = document.getElementById("preview");
     const placeholder = document.getElementById("placeholder");
 
@@ -584,55 +805,135 @@
     const resultLabel = document.getElementById("resultLabel");
     const resultConfidence = document.getElementById("resultConfidence");
     const bigResultText = document.getElementById("bigResultText");
+    const subResultText = document.getElementById("subResultText");
     const postAdvice = document.getElementById("postAdvice");
     const badgeDot = document.getElementById("badgeDot");
 
-    function setStatus(msg){ statusEl.textContent = msg; }
+    const spinner = document.getElementById("spinner");
+    const toastText = document.getElementById("toastText");
+
+    const s1 = document.getElementById("s1");
+    const s2 = document.getElementById("s2");
+    const s3 = document.getElementById("s3");
+
+    let state = {
+      modelLoaded: false,
+      fileReady: false,
+      predicting: false,
+    };
+
+    function setToast(text, loading=false){
+      toastText.textContent = text;
+      spinner.style.display = loading ? "inline-block" : "none";
+    }
+
     function setDot(color){
       badgeDot.style.background = color;
       badgeDot.style.boxShadow = "0 0 0 4px rgba(37,99,235,0.12)";
     }
 
+    function setStep(activeStep){
+      // reset
+      [s1,s2,s3].forEach(s => { s.classList.remove("active"); s.classList.remove("done"); });
+
+      if(activeStep >= 1){ s1.classList.add("active"); }
+      if(activeStep >= 2){ s1.classList.add("done"); s2.classList.add("active"); }
+      if(activeStep >= 3){ s1.classList.add("done"); s2.classList.add("done"); s3.classList.add("active"); }
+    }
+
+    function refreshUI(){
+      loadBtn.disabled = state.modelLoaded || state.predicting;
+      testBtn.disabled = !state.modelLoaded || !state.fileReady || state.predicting;
+      anotherBtn.disabled = !state.modelLoaded || !state.fileReady || state.predicting;
+
+      if(!state.modelLoaded){
+        setStep(1);
+      } else if(state.modelLoaded && !state.fileReady){
+        setStep(2);
+      } else {
+        setStep(3);
+      }
+    }
+
     function clearResults(){
       labelContainer.innerHTML = "";
       resultBanner.style.display = "none";
+      resultBanner.classList.remove("positive","negative");
       bigResultText.textContent = "";
-      resultConfidence.textContent = "";
+      subResultText.textContent = "";
+      resultConfidence.textContent = "Confidence: —";
       postAdvice.innerHTML = "";
     }
 
     function resetForNextImage(){
       clearResults();
+
+      state.fileReady = false;
+      refreshUI();
+
       preview.onload = null;
       preview.classList.remove("show");
       preview.style.display = "none";
       preview.removeAttribute("src");
       preview.src = "";
+
       placeholder.style.display = "block";
-      testBtn.disabled = true;
-      anotherBtn.disabled = true;
+      fileInput.value = "";
+
+      setToast(state.modelLoaded ? "Upload another image to continue." : "Model not loaded.", false);
     }
 
+    // Load model
     loadBtn.addEventListener("click", async () => {
       try{
-        loadBtn.disabled = true;
-        setStatus("Loading model...");
+        state.predicting = true;
+        refreshUI();
+        setToast("Loading model…", true);
 
         const r = await fetch(MODEL_URL + "model.json", { cache: "no-store" });
         if(!r.ok) throw new Error("model.json not found at " + MODEL_URL);
 
         model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
 
-        setStatus("Model loaded. Upload an image.");
-        fileInput.disabled = false;
+        state.modelLoaded = true;
+        setToast("Model loaded. Upload an image.", false);
       } catch (e){
         console.error(e);
-        setStatus("Model failed to load. Confirm model.json, metadata.json, weights.bin are in the same folder as index.html.");
-        loadBtn.disabled = false;
+        setToast("Model failed to load. Confirm model.json, metadata.json, weights.bin are in the same folder as index.html.", false);
+      } finally {
+        state.predicting = false;
+        refreshUI();
       }
     });
 
-    fileInput.addEventListener("change", () => {
+    // Dropzone click triggers input
+    dropzone.addEventListener("click", () => fileInput.click());
+    dropzone.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        fileInput.click();
+      }
+    });
+
+    // Drag events
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("drag");
+    });
+    dropzone.addEventListener("dragleave", () => dropzone.classList.remove("drag"));
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("drag");
+      if(e.dataTransfer.files && e.dataTransfer.files[0]){
+        fileInput.files = e.dataTransfer.files; // works in modern browsers
+        handleFileChange();
+      }
+    });
+
+    // Input change
+    fileInput.addEventListener("change", handleFileChange);
+
+    function handleFileChange(){
       const file = fileInput.files && fileInput.files[0];
       if(!file) return;
 
@@ -646,34 +947,46 @@
 
       preview.onload = () => {
         preview.classList.add("show");
-        testBtn.disabled = !model;
-        anotherBtn.disabled = true;
-        setStatus(model ? "Ready. Click Test Photo." : "Load the model first.");
+        state.fileReady = true;
+        refreshUI();
+        setToast(state.modelLoaded ? "Ready. Click Test Photo." : "Load the model first.", false);
         URL.revokeObjectURL(url);
       };
 
       preview.src = url;
-    });
+    }
 
+    // Test photo
     testBtn.addEventListener("click", async () => {
-      if(!model){ setStatus("Load the model first."); return; }
-      if(!preview || !preview.src){ setStatus("Upload an image first."); return; }
+      if(!state.modelLoaded){
+        setToast("Load the model first.", false);
+        return;
+      }
+      if(!state.fileReady || !preview.src){
+        setToast("Upload an image first.", false);
+        return;
+      }
 
       try{
-        setStatus("Analyzing image...");
+        state.predicting = true;
+        refreshUI();
+        setToast("Analyzing image…", true);
+
         await predict();
-        setStatus("Done.");
-        anotherBtn.disabled = false;
+
+        setToast("Done. You can check another image.", false);
       } catch(e){
         console.error(e);
-        setStatus("Prediction failed.");
+        setToast("Prediction failed.", false);
+      } finally {
+        state.predicting = false;
+        refreshUI();
       }
     });
 
+    // Another image
     anotherBtn.addEventListener("click", () => {
-      fileInput.value = "";
       resetForNextImage();
-      setStatus(model ? "Upload another image to continue." : "Model not loaded.");
       document.getElementById("tool").scrollIntoView({behavior:"smooth"});
     });
 
@@ -683,34 +996,44 @@
 
       const best = prediction[0];
       const bestPct = Math.round(best.probability * 100);
+      const bestName = (best.className || "Unknown").trim();
+
+      const nameLower = bestName.toLowerCase();
+      const isPositive = nameLower.includes("pneum") || nameLower.includes("positive");
 
       resultBanner.style.display = "block";
-      resultLabel.textContent = `Top result: ${best.className}`;
+      resultLabel.textContent = `Top result: ${bestName}`;
       resultConfidence.textContent = `Confidence: ${bestPct}%`;
-      bigResultText.textContent = best.className;
 
-      const name = (best.className || "").toLowerCase();
-
-      if(name.includes("pneum") || name.includes("positive")){
+      if(isPositive){
+        resultBanner.classList.add("positive");
         setDot(getComputedStyle(document.documentElement).getPropertyValue("--warn").trim() || "#ef4444");
+        bigResultText.textContent = "Possible pneumonia detected";
+        subResultText.textContent = "This is an educational estimate, not a diagnosis.";
         postAdvice.innerHTML = `
-          <b>Important:</b> This is not a diagnosis. Please <b>consult a medical professional</b>.
+          <b>Recommended next steps:</b>
           <ul>
+            <li>Consult a medical professional for a formal interpretation.</li>
             <li>If you have trouble breathing, chest pain, confusion, or blue lips, seek urgent care.</li>
-            <li>Bring the X-ray and symptoms to a clinician for proper evaluation.</li>
+            <li>Bring the X-ray plus symptoms to a clinician for evaluation.</li>
           </ul>
         `;
       } else {
+        resultBanner.classList.add("negative");
         setDot(getComputedStyle(document.documentElement).getPropertyValue("--ok").trim() || "#16a34a");
+        bigResultText.textContent = "No pneumonia detected by this model";
+        subResultText.textContent = "A “normal” AI result does not guarantee everything is fine.";
         postAdvice.innerHTML = `
-          <b>Reminder:</b> A “normal” AI result does not guarantee everything is fine.
+          <b>Recommended next steps:</b>
           <ul>
-            <li>If symptoms persist, consult a clinician.</li>
-            <li>Image quality affects predictions.</li>
+            <li>If symptoms persist, consult a clinician anyway.</li>
+            <li>Retest with a clearer image if available and compare confidence.</li>
+            <li>Remember: image quality and positioning affect predictions.</li>
           </ul>
         `;
       }
 
+      // List all predictions
       labelContainer.innerHTML = "";
       prediction.forEach(p => {
         const pct = Math.round(p.probability * 100);
@@ -719,7 +1042,7 @@
         card.className = "predCard";
 
         const label = document.createElement("div");
-        label.style.fontWeight = "900";
+        label.style.fontWeight = "950";
         label.textContent = `${p.className}: ${pct}%`;
 
         const bar = document.createElement("div");
@@ -737,6 +1060,48 @@
         requestAnimationFrame(() => { fill.style.width = `${pct}%`; });
       });
     }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add("in");
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+    // Cursor sparkle (lightweight)
+    let lastSparkle = 0;
+    window.addEventListener("pointermove", (e) => {
+      const now = performance.now();
+      if(now - lastSparkle < 40) return; // throttle
+      lastSparkle = now;
+
+      const s = document.createElement("div");
+      s.className = "sparkle";
+      s.style.left = e.clientX + "px";
+      s.style.top = e.clientY + "px";
+
+      const size = 6 + Math.random()*8;
+      s.style.width = size + "px";
+      s.style.height = size + "px";
+      s.style.opacity = (0.7 + Math.random()*0.25).toFixed(2);
+
+      // tiny random tint
+      const hue = 190 + Math.random()*60;
+      s.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), hsla(${hue}, 90%, 55%, 0.85))`;
+      s.style.boxShadow = `0 0 14px hsla(${hue}, 90%, 55%, 0.25)`;
+
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 560);
+    });
+
+    // Initial UI state
+    setToast("Model not loaded.", false);
+    refreshUI();
   </script>
 </body>
 </html>
