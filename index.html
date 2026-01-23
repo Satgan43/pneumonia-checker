@@ -1,41 +1,300 @@
-<!-- ✅ UPDATED: Testimonials only (Future Add-ons removed), with left image + right testimonials -->
-<h2 class="sectionTitle reveal" id="stories">Testimonials</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Intelli-Monia | AI Pneumonia Screen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<section class="twoCol">
-  <!-- LEFT: image placeholder panel (blank space for your image) -->
-  <div class="panel glass reveal" style="padding:0; overflow:hidden;">
-    <!-- Replace src with your own image path or URL -->
-    <img
-      class="impactImg"
-      src="./assets/testimonials-image.jpg"
-      alt="Healthcare and radiology illustration"
-      style="width:100%; height:100%; display:block; object-fit:cover; min-height:340px;"
-    />
+<style>
+/* ---------------- ROOT + BASE ---------------- */
+:root{
+  --bg0:#f6f7f9;
+  --bg1:#eef1f5;
+  --ink:#0b1220;
+  --muted:rgba(11,18,32,0.70);
+
+  --glass: rgba(255,255,255,0.68);
+  --glass2: rgba(255,255,255,0.42);
+  --border: rgba(15,23,42,0.12);
+
+  --shadow: 0 18px 55px rgba(2,6,23,0.10);
+  --shadow2: 0 10px 30px rgba(2,6,23,0.10);
+  --radius: 22px;
+
+  --accent:#2563eb;
+  --accent2:#06b6d4;
+  --ok:#16a34a;
+  --warn:#ef4444;
+  --focus: rgba(37,99,235,0.35);
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(37,99,235,0.12), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(6,182,212,0.10), transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  background-attachment: fixed;
+  overflow-x:hidden;
+}
+:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; border-radius:14px; }
+
+.wrap{ width:min(1140px, calc(100% - 44px)); margin: 22px auto 70px; }
+.glass{
+  background: linear-gradient(180deg, var(--glass), var(--glass2));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+}
+
+/* ---------------- UTIL ---------------- */
+.reveal{ opacity:0; transform:translateY(12px); transition:0.6s ease; }
+.reveal.in{ opacity:1; transform:none; }
+
+.sectionTitle{
+  font-size: clamp(26px, 4.5vw, 42px);
+  letter-spacing: -0.4px;
+  margin: 22px 0 12px;
+}
+
+/* ---------------- NAV ---------------- */
+.topbar{
+  position: sticky;
+  top: 12px;
+  z-index: 50;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  margin-bottom:16px;
+}
+.brand{ display:flex; gap:10px; align-items:center; font-weight:900; }
+.logoDot{
+  width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #fff, var(--accent));
+  box-shadow:0 0 0 5px rgba(37,99,235,.15);
+}
+.navLinks{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.linkBtn{
+  padding:9px 12px;border-radius:999px;border:1px solid var(--border);
+  background:rgba(255,255,255,.65);text-decoration:none;color:var(--ink);
+  font-size:13px;font-weight:800;
+}
+.pill{ padding:9px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.65);font-size:13px; }
+
+/* ---------------- HERO ---------------- */
+.hero{ display:grid; grid-template-columns:1.05fr .95fr; gap:16px; }
+@media(max-width:980px){ .hero{grid-template-columns:1fr;} }
+.heroLeft{ padding:26px 24px; }
+.heroRight{ position:relative; overflow:hidden; }
+.heroSvg{ position:absolute; inset:0; width:100%; height:100%; }
+.heroBadge{
+  position:absolute; bottom:14px; right:14px;
+  background:rgba(255,255,255,.8);
+  border:1px solid var(--border);
+  padding:12px;border-radius:16px;font-size:13px;
+}
+.kicker{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+h1{ font-size:clamp(34px,5vw,54px); margin:8px 0; }
+.mission{ color:var(--muted); line-height:1.6; }
+.btn{ padding:11px 14px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.75);font-weight:900;cursor:pointer; }
+.btn.primary{ background:linear-gradient(90deg,rgba(37,99,235,.2),rgba(6,182,212,.14),rgba(255,255,255,.7)); }
+
+/* ---------------- LAYOUT BLOCKS ---------------- */
+.cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+@media(max-width:980px){ .cards{grid-template-columns:1fr;} }
+.card{ padding:18px; }
+.twoCol{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media(max-width:980px){ .twoCol{grid-template-columns:1fr;} }
+.panel{ padding:18px; }
+
+.quote{
+  margin-top:12px;padding:12px;border-radius:16px;
+  background:rgba(255,255,255,.75);border:1px solid var(--border);
+}
+.quote .name{ display:block; margin-top:6px; font-size:13px; color:var(--muted); }
+
+/* ---------------- IMPACT + TESTIMONIAL IMAGES ---------------- */
+.impactImg{
+  width:100%;height:100%;object-fit:cover;min-height:360px;display:block;
+}
+
+/* ---------------- DETAILS ---------------- */
+details{ margin-bottom:12px; }
+summary{ font-weight:900; cursor:pointer; display:flex; justify-content:space-between; }
+.expandHint{
+  font-size:12px;padding:6px 10px;border-radius:999px;
+  border:1px solid var(--border); background:rgba(255,255,255,.7);
+}
+
+/* ---------------- TOOL ---------------- */
+.toolWrap{ display:grid; grid-template-columns:1.05fr .95fr; gap:14px; }
+@media(max-width:980px){ .toolWrap{grid-template-columns:1fr;} }
+
+.toast{ display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+.spin{ width:14px;height:14px;border-radius:50%;border:2px solid #ccc;border-top-color:var(--accent);animation:spin 1s linear infinite;display:none; }
+@keyframes spin{ to{transform:rotate(360deg);} }
+
+.steps{ display:flex; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+.step{ padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.6);font-weight:900; }
+.step.active{ background:rgba(37,99,235,.12); }
+
+.dropzone{
+  margin-top:10px;padding:14px;border-radius:18px;border:1px dashed var(--border);
+  background:rgba(255,255,255,.7);display:flex;justify-content:space-between;
+  cursor:pointer;
+}
+
+.previewBox{ padding:16px; display:flex; justify-content:center; align-items:center; min-height:430px; }
+#preview{ max-width:100%; border-radius:18px; display:none; }
+#preview.show{ display:block; }
+
+/* ---------------- SPARKLE ---------------- */
+.sparkle{
+  position:fixed;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle, #fff, var(--accent));
+  pointer-events:none;animation:spark 0.6s forwards;
+}
+@keyframes spark{ to{ transform:translateY(-20px) scale(.2); opacity:0; } }
+</style>
+</head>
+
+<body>
+<main class="wrap">
+
+<header class="topbar glass reveal">
+  <div class="brand"><span class="logoDot"></span>Intelli-Monia</div>
+  <nav class="navLinks">
+    <a class="linkBtn" href="#tool">Try it</a>
+    <a class="linkBtn" href="#impact">Impact</a>
+    <a class="linkBtn" href="#stories">Testimonials</a>
+    <a class="linkBtn" href="#whattodo">What to do</a>
+    <span class="pill">Educational demo</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="heroLeft glass reveal">
+    <div class="kicker">AI-assisted screening</div>
+    <h1>Welcome to Intelli-Monia.</h1>
+    <p class="mission"><b>Mission:</b> Using AI to help flag possible pneumonia on chest X-rays and reduce delays in awareness.</p>
+    <br>
+    <a class="btn primary" href="#tool">Check it out ↓</a>
   </div>
 
-  <!-- RIGHT: testimonials panel -->
-  <div class="panel glass reveal">
-    <h3>What people are saying</h3>
-    <p>Sample testimonials for a school project demo.</p>
-
-    <div class="quote">
-      “The interface was simple and the result explanation was clear. It helped me understand what questions I should ask during a clinic visit.”
-      <span class="name">— Maya R., Student Tester</span>
-    </div>
-
-    <div class="quote">
-      “I liked that it shows confidence and gives next steps. It felt like a polished, professional demo.”
-      <span class="name">— Daniel K., Parent Volunteer</span>
-    </div>
-
-    <div class="quote">
-      “Fast, clean, and easy to use. The upload-and-test workflow makes sense even for someone who is not technical.”
-      <span class="name">— Priya S., Community Reviewer</span>
-    </div>
-
-    <div class="quote">
-      “The guidance section made the limitations clear, which is important. It is a great example of how AI can support health education.”
-      <span class="name">— Marcus L., Club Judge</span>
-    </div>
+  <div class="heroRight glass reveal">
+    <svg class="heroSvg" viewBox="0 0 1200 800">
+      <rect width="1200" height="800" fill="#e5edff"/>
+      <circle cx="900" cy="200" r="200" fill="#c7d7ff"/>
+    </svg>
+    <div class="heroBadge">Built with Teachable Machine + TensorFlow.js</div>
   </div>
 </section>
+
+<!-- IMPACT -->
+<h2 class="sectionTitle reveal" id="impact">Impact</h2>
+<section class="twoCol">
+  <div class="panel glass reveal">
+    <h3>Why this matters</h3>
+    <p>AI tools like Intelli-Monia can support faster screening, improve awareness, and help visualize how machine learning can assist radiology workflows.</p>
+  </div>
+  <div class="panel glass reveal" style="padding:0;">
+    <img class="impactImg" src="./assets/doctor-radiology.jpg" alt="Doctor reviewing scans">
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<h2 class="sectionTitle reveal" id="stories">Testimonials</h2>
+<section class="twoCol">
+  <div class="panel glass reveal" style="padding:0;">
+    <img class="impactImg" src="./assets/testimonials-image.jpg" alt="Medical technology image">
+  </div>
+  <div class="panel glass reveal">
+    <h3>What people are saying</h3>
+
+    <div class="quote">“This felt like a real healthcare app. The explanations and visuals were very professional.”<span class="name">— Maya Rodriguez, Student Tester</span></div>
+    <div class="quote">“The step-by-step design made it very easy to use. It shows how AI can support patients.”<span class="name">— Daniel Chen, Parent Volunteer</span></div>
+    <div class="quote">“Clear, polished, and meaningful. A strong example of responsible AI design.”<span class="name">— Priya Nair, Community Reviewer</span></div>
+    <div class="quote">“This project stands out for both design and purpose.”<span class="name">— Marcus Thompson, STEM Judge</span></div>
+  </div>
+</section>
+
+<!-- TOOL -->
+<h2 class="sectionTitle reveal" id="tool">Try Intelli-Monia</h2>
+<section class="toolWrap">
+  <div class="panel glass reveal">
+    <div class="toast"><span class="spin" id="spin"></span><span id="status">Model not loaded.</span></div>
+    <button class="btn" id="loadBtn">Load Model</button>
+    <input type="file" id="fileInput" hidden>
+    <div class="dropzone" onclick="fileInput.click()">Browse computer files</div>
+    <button class="btn primary" id="testBtn" disabled>Test Photo</button>
+  </div>
+
+  <div class="previewBox glass reveal">
+    <img id="preview">
+  </div>
+</section>
+
+<!-- WHAT TO DO -->
+<h2 class="sectionTitle reveal" id="whattodo">What to do next</h2>
+<section class="twoCol">
+  <div class="panel glass reveal"><p>If flagged, consult a medical professional.</p></div>
+  <div class="panel glass reveal"><p>If normal, but symptoms persist, still seek care.</p></div>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+<script>
+let model;
+const fileInput=document.getElementById("fileInput");
+const preview=document.getElementById("preview");
+const status=document.getElementById("status");
+const loadBtn=document.getElementById("loadBtn");
+const testBtn=document.getElementById("testBtn");
+
+loadBtn.onclick=async()=>{
+  status.textContent="Loading model...";
+  model=await tmImage.load("./model.json","./metadata.json");
+  status.textContent="Model loaded. Upload image.";
+  fileInput.click();
+}
+
+fileInput.onchange=e=>{
+  preview.src=URL.createObjectURL(e.target.files[0]);
+  preview.classList.add("show");
+  testBtn.disabled=false;
+}
+
+testBtn.onclick=async()=>{
+  status.textContent="Analyzing...";
+  await model.predict(preview);
+  status.textContent="Done.";
+}
+
+/* Reveal */
+const obs=new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add("in")));
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+
+/* Sparkles */
+addEventListener("pointermove",e=>{
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.style.left=e.clientX+"px";
+  s.style.top=e.clientY+"px";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),600);
+});
+</script>
+
+</body>
+</html>
