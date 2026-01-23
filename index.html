@@ -297,9 +297,25 @@
       font-weight: 950;
       letter-spacing: -0.2px;
       list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
     }
     details summary::-webkit-details-marker{ display:none; }
     details .detailBody{ margin-top: 10px; color: var(--muted); line-height: 1.6; font-size: 14px; }
+
+    .expandHint{
+      margin-left: 10px;
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(11,18,32,0.62);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.70);
+      white-space: nowrap;
+    }
 
     /* Tool */
     .toolWrap{
@@ -492,6 +508,16 @@
 
     .foot{ margin-top: 14px; color: rgba(11,18,32,0.68); font-size: 13px; line-height: 1.55; }
 
+    /* Impact image */
+    .impactImg{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      min-height: 340px;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
     /* Sparkles */
     .sparkle{
       position: fixed;
@@ -526,6 +552,7 @@
       </div>
       <nav class="navLinks">
         <a class="linkBtn" href="#tool">Try it</a>
+        <a class="linkBtn" href="#impact">Impact</a>
         <a class="linkBtn" href="#stories">Stories</a>
         <a class="linkBtn" href="#whattodo">What to do</a>
         <span class="pill">Educational demo • Not medical advice</span>
@@ -627,15 +654,55 @@
       </div>
     </section>
 
+    <!-- Impact -->
+    <h2 class="sectionTitle reveal" id="impact">Impact</h2>
+    <section class="twoCol">
+      <div class="panel glass reveal">
+        <h3>Why this is amazing</h3>
+        <p>
+          Intelli-Monia demonstrates how AI can support healthcare by providing fast, consistent screening signals from chest X-rays.
+          In real-world clinical workflows, radiologists interpret imaging alongside patient history and symptoms. Tools like this can help
+          prioritize cases, reduce delays in initial triage, and support low-resource settings where specialist access is limited.
+        </p>
+        <div class="quote">
+          <b>What this can help with:</b>
+          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
+            <li>Faster awareness while waiting for official reads</li>
+            <li>Supporting triage in busy clinics (as a secondary signal)</li>
+            <li>Helping educational understanding of AI in medicine</li>
+          </ul>
+          <span class="name">Educational demo — not a diagnostic device</span>
+        </div>
+        <p style="margin-top:12px; color: rgba(11,18,32,0.72); font-size: 13px; font-weight: 900;">
+          Tip: Add an evaluation chart (accuracy/precision/recall) from your dataset to make this section even stronger.
+        </p>
+      </div>
+
+      <div class="panel glass reveal" style="padding:0; overflow:hidden;">
+        <!-- IMPORTANT: Put a real image file in your repo at assets/doctor-radiology.jpg -->
+        <img
+          class="impactImg"
+          src="./assets/doctor-radiology.jpg"
+          alt="Doctor reviewing radiology imaging"
+        />
+      </div>
+    </section>
+
     <details class="glass reveal">
-      <summary>How it works (simple explanation)</summary>
+      <summary>
+        How it works (simple explanation)
+        <span class="expandHint">Click to Expand</span>
+      </summary>
       <div class="detailBody">
         Intelli-Monia loads a Teachable Machine image model in your browser using TensorFlow.js. When you upload an X-ray, the model outputs probabilities for each class. This does not diagnose illness; it only estimates which label the image looks most similar to based on training.
       </div>
     </details>
 
     <details class="glass reveal">
-      <summary>Limitations (important)</summary>
+      <summary>
+        Limitations (important)
+        <span class="expandHint">Click to Expand</span>
+      </summary>
       <div class="detailBody">
         Predictions depend on training data, image quality, and how similar your image is to what the model saw. Even if the result says “normal,” symptoms may still require medical evaluation. This tool is educational only.
       </div>
@@ -703,19 +770,16 @@
           <button class="btn" id="anotherBtn" type="button" disabled>Check Another Image</button>
         </div>
 
-        <!-- Accessible hidden input -->
         <label class="fileHidden" for="fileInput">Upload X-ray image</label>
         <input type="file" id="fileInput" accept="image/*" />
 
         <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload an image by clicking or dragging and dropping">
           <div class="dzLeft">
             <b>Upload your X-ray</b>
-            <span>Click here or drag and drop an image. Recommended: clear chest X-ray.</span>
+            <span>Click here or drag and drop an image from your computer.</span>
           </div>
           <div class="dzRight">
-            <span class="tag">JPG / PNG</span>
-            <span class="tag">No upload storage</span>
-            <span class="tag">Educational demo</span>
+            <span class="tag">Browse computer files</span>
           </div>
         </div>
 
@@ -833,9 +897,7 @@
     }
 
     function setStep(activeStep){
-      // reset
       [s1,s2,s3].forEach(s => { s.classList.remove("active"); s.classList.remove("done"); });
-
       if(activeStep >= 1){ s1.classList.add("active"); }
       if(activeStep >= 2){ s1.classList.add("done"); s2.classList.add("active"); }
       if(activeStep >= 3){ s1.classList.add("done"); s2.classList.add("done"); s3.classList.add("active"); }
@@ -883,7 +945,6 @@
       setToast(state.modelLoaded ? "Upload another image to continue." : "Model not loaded.", false);
     }
 
-    // Load model
     loadBtn.addEventListener("click", async () => {
       try{
         state.predicting = true;
@@ -906,7 +967,6 @@
       }
     });
 
-    // Dropzone click triggers input
     dropzone.addEventListener("click", () => fileInput.click());
     dropzone.addEventListener("keydown", (e) => {
       if(e.key === "Enter" || e.key === " "){
@@ -915,7 +975,6 @@
       }
     });
 
-    // Drag events
     dropzone.addEventListener("dragover", (e) => {
       e.preventDefault();
       dropzone.classList.add("drag");
@@ -925,12 +984,11 @@
       e.preventDefault();
       dropzone.classList.remove("drag");
       if(e.dataTransfer.files && e.dataTransfer.files[0]){
-        fileInput.files = e.dataTransfer.files; // works in modern browsers
+        fileInput.files = e.dataTransfer.files;
         handleFileChange();
       }
     });
 
-    // Input change
     fileInput.addEventListener("change", handleFileChange);
 
     function handleFileChange(){
@@ -956,7 +1014,6 @@
       preview.src = url;
     }
 
-    // Test photo
     testBtn.addEventListener("click", async () => {
       if(!state.modelLoaded){
         setToast("Load the model first.", false);
@@ -984,7 +1041,6 @@
       }
     });
 
-    // Another image
     anotherBtn.addEventListener("click", () => {
       resetForNextImage();
       document.getElementById("tool").scrollIntoView({behavior:"smooth"});
@@ -1033,7 +1089,6 @@
         `;
       }
 
-      // List all predictions
       labelContainer.innerHTML = "";
       prediction.forEach(p => {
         const pct = Math.round(p.probability * 100);
@@ -1077,7 +1132,7 @@
     let lastSparkle = 0;
     window.addEventListener("pointermove", (e) => {
       const now = performance.now();
-      if(now - lastSparkle < 40) return; // throttle
+      if(now - lastSparkle < 40) return;
       lastSparkle = now;
 
       const s = document.createElement("div");
@@ -1090,7 +1145,6 @@
       s.style.height = size + "px";
       s.style.opacity = (0.7 + Math.random()*0.25).toFixed(2);
 
-      // tiny random tint
       const hue = 190 + Math.random()*60;
       s.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), hsla(${hue}, 90%, 55%, 0.85))`;
       s.style.boxShadow = `0 0 14px hsla(${hue}, 90%, 55%, 0.25)`;
