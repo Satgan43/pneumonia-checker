@@ -726,75 +726,6 @@
     /* Hide the native file input but keep it accessible */
     input[type="file"]{ display:none; }
 
-    /* Future roadmap (audience-centered) */
-    .roadmapGrid{
-      display:grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-    @media (max-width: 980px){ .roadmapGrid{ grid-template-columns: 1fr; } }
-
-    .milestones{
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(11,18,32,0.74);
-      line-height: 1.65;
-      font-size: 14px;
-    }
-    .milestones li{ margin: 10px 0; }
-    .dateTag{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,0.10);
-      background: rgba(255,255,255,0.80);
-      font-weight: 950;
-      color: rgba(11,18,32,0.82);
-      font-size: 12px;
-      white-space: nowrap;
-      margin-right: 8px;
-    }
-    .roadmapImgWrap{
-      height: 100%;
-      min-height: 320px;
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,0.10);
-      overflow:hidden;
-      background: rgba(255,255,255,0.58);
-      box-shadow: 0 10px 24px rgba(2,6,23,0.06);
-      position: relative;
-    }
-    .roadmapImgWrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      transform: scale(1.04);
-      transition: transform 900ms cubic-bezier(.2,.9,.2,1);
-      filter: saturate(1.05) contrast(1.02);
-    }
-    .roadmapImgWrap:hover img{ transform: scale(1.10); }
-    .imgOverlay{
-      position:absolute;
-      inset:0;
-      background: linear-gradient(180deg, rgba(2,6,23,0.00), rgba(2,6,23,0.30));
-      pointer-events:none;
-    }
-    .imgCaption{
-      position:absolute;
-      left: 14px;
-      bottom: 14px;
-      right: 14px;
-      color: rgba(255,255,255,0.92);
-      font-weight: 950;
-      letter-spacing:-0.2px;
-      text-shadow: 0 8px 22px rgba(2,6,23,0.35);
-      font-size: 13px;
-    }
-
     /* Cursor follower */
     .cursorBlob{
       position: fixed;
@@ -834,7 +765,6 @@
       <nav class="navLinks">
         <a class="linkBtn" href="#tool">Try it</a>
         <a class="linkBtn" href="#impact">Impact</a>
-        <a class="linkBtn" href="#roadmap">Future</a>
         <span class="pill">Educational demo • Not medical advice</span>
       </nav>
     </header>
@@ -1023,7 +953,6 @@
           </div>
         </div>
 
-        <!-- RESULT + “What to do next” now lives inside the tool (not a separate site section) -->
         <div class="resultBanner" id="resultBanner" aria-live="polite">
           <div class="badgeRow">
             <div class="badge">
@@ -1036,13 +965,10 @@
           <div class="bigResult" id="bigResultText"></div>
           <div class="subResult" id="subResultText"></div>
 
-          <div class="advice" id="postAdvice"></div>
-
           <div class="quote" style="margin-top:12px;">
             <b>Important:</b> This is an educational screening demo and cannot confirm or rule out pneumonia.
-            If you feel unwell, consult a clinician. For severe symptoms (trouble breathing, chest pain, confusion),
-            seek urgent care.
-            <span class="name">Safety-first guidance</span>
+            Always consult a licensed medical professional for formal diagnosis and treatment decisions.
+            <span class="name">Educational use only</span>
           </div>
         </div>
 
@@ -1059,64 +985,6 @@
           Your uploaded image will appear here.
         </div>
         <img id="preview" alt="Uploaded image preview" />
-      </div>
-    </section>
-
-    <!-- Audience-centered roadmap -->
-    <h2 class="sectionTitle reveal" id="roadmap">What you can expect next</h2>
-    <section class="roadmapGrid">
-      <div class="panel glass reveal sheen">
-        <h3>Planned improvements (target timeline)</h3>
-        <p style="margin:0; color: var(--muted); line-height: 1.6; font-size: 14px;">
-          These upgrades are designed to improve clarity, reliability, and the overall experience for patients, families, and educators.
-        </p>
-
-        <div class="quote" style="margin-top:12px;">
-          <ul class="milestones">
-            <li>
-              <span class="dateTag">~1 month</span>
-              Clearer <b>confidence explanations</b> and smarter wording so results are easier to interpret responsibly.
-            </li>
-            <li>
-              <span class="dateTag">~2 months</span>
-              <b>Image quality checks</b> (blur/low-resolution warnings) to reduce misleading outputs caused by poor inputs.
-            </li>
-            <li>
-              <span class="dateTag">~3 months</span>
-              A <b>results summary view</b> that presents confidence trends and helps users understand consistency across retests.
-            </li>
-            <li>
-              <span class="dateTag">~6 months</span>
-              <b>Model version transparency</b> (v1 vs v2), plus a public changelog and basic evaluation metrics.
-            </li>
-            <li>
-              <span class="dateTag">~1 year</span>
-              Broader <b>screening categories</b> (still educational) with stronger guardrails and improved explainability.
-            </li>
-          </ul>
-          <span class="name">Timelines are estimates and depend on evaluation and data quality.</span>
-        </div>
-
-        <div class="quote">
-          <b>Experience upgrades:</b>
-          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
-            <li>Exportable summary (for learning / documentation)</li>
-            <li>Accessibility enhancements (keyboard flow + contrast toggle)</li>
-            <li>More guidance tailored to responsible interpretation</li>
-          </ul>
-          <span class="name">Built to keep the product clear and trustworthy.</span>
-        </div>
-      </div>
-
-      <div class="panel glass reveal sheen" style="padding:0;">
-        <div class="roadmapImgWrap">
-          <img
-            src="https://img.freepik.com/premium-photo/person-using-vr-ar-googles_941097-255404.jpg"
-            alt="Person using VR/AR goggles"
-          />
-          <div class="imgOverlay" aria-hidden="true"></div>
-          <div class="imgCaption">Visual placeholder — replace with your own product graphic or workflow diagram</div>
-        </div>
       </div>
     </section>
 
@@ -1148,7 +1016,6 @@
     const resultConfidence = document.getElementById("resultConfidence");
     const bigResultText = document.getElementById("bigResultText");
     const subResultText = document.getElementById("subResultText");
-    const postAdvice = document.getElementById("postAdvice");
     const badgeDot = document.getElementById("badgeDot");
 
     const spinner = document.getElementById("spinner");
@@ -1269,7 +1136,6 @@
       bigResultText.textContent = "";
       subResultText.textContent = "";
       resultConfidence.textContent = "Confidence: —";
-      postAdvice.innerHTML = "";
     }
 
     function resetForNextImage(){
@@ -1406,33 +1272,16 @@
       resultLabel.textContent = `Top result: ${bestName}`;
       resultConfidence.textContent = `Confidence: ${bestPct}%`;
 
-      // Make “what to do next” appear inside the test result area (professional guidance)
       if(isPositive){
         resultBanner.classList.add("positive");
         setDot(getComputedStyle(document.documentElement).getPropertyValue("--warn").trim() || "#ef4444");
         bigResultText.textContent = "Possible pneumonia pattern detected";
         subResultText.textContent = "Educational estimate — not a diagnosis.";
-        postAdvice.innerHTML = `
-          <b>What to do next:</b>
-          <ul>
-            <li>Consult a medical professional for a formal interpretation and exam.</li>
-            <li>Share symptoms (fever, cough, shortness of breath, chest pain) and onset timing.</li>
-            <li>If severe symptoms are present, seek urgent care immediately.</li>
-          </ul>
-        `;
       } else {
         resultBanner.classList.add("negative");
         setDot(getComputedStyle(document.documentElement).getPropertyValue("--ok").trim() || "#16a34a");
         bigResultText.textContent = "No pneumonia pattern detected by this model";
-        subResultText.textContent = "A “normal” AI result does not guarantee everything is fine.";
-        postAdvice.innerHTML = `
-          <b>What to do next:</b>
-          <ul>
-            <li>If symptoms persist or worsen, consult a clinician anyway.</li>
-            <li>Consider retesting with a clearer image (positioning and quality matter).</li>
-            <li>Use this result as one data point, not a conclusion.</li>
-          </ul>
-        `;
+        subResultText.textContent = "Educational estimate — not a diagnosis.";
       }
 
       labelContainer.innerHTML = "";
@@ -1462,7 +1311,6 @@
         requestAnimationFrame(() => { fill.style.width = `${pct}%`; });
       });
 
-      // Scroll the user to the result smoothly (feels premium)
       requestAnimationFrame(() => {
         resultBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
       });
