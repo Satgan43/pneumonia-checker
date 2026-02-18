@@ -44,6 +44,63 @@
       overflow-x:hidden;
     }
 
+    /* Animated ambient “Cuberto-ish” background */
+    .ambient{
+      position: fixed;
+      inset: -40vh -30vw;
+      z-index: -2;
+      pointer-events:none;
+      filter: blur(40px);
+      opacity: 0.75;
+      mix-blend-mode: multiply;
+      animation: floatField 18s ease-in-out infinite;
+    }
+    .orb{
+      position:absolute;
+      width: 520px; height: 520px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%,
+        rgba(255,255,255,0.9),
+        rgba(37,99,235,0.25),
+        rgba(6,182,212,0.12),
+        transparent 70%);
+      transform: translate3d(0,0,0);
+      animation: orbDrift 14s ease-in-out infinite;
+    }
+    .orb.o2{
+      width: 640px; height: 640px;
+      left: 50%;
+      top: 30%;
+      background: radial-gradient(circle at 30% 30%,
+        rgba(255,255,255,0.85),
+        rgba(6,182,212,0.22),
+        rgba(37,99,235,0.10),
+        transparent 70%);
+      animation-duration: 17s;
+      animation-delay: -6s;
+    }
+    .orb.o3{
+      width: 460px; height: 460px;
+      left: 70%;
+      top: -10%;
+      background: radial-gradient(circle at 30% 30%,
+        rgba(255,255,255,0.85),
+        rgba(37,99,235,0.18),
+        rgba(245,158,11,0.08),
+        transparent 70%);
+      animation-duration: 16s;
+      animation-delay: -9s;
+    }
+    @keyframes orbDrift{
+      0%{ transform: translate3d(0,0,0) scale(1); }
+      50%{ transform: translate3d(60px, -30px, 0) scale(1.08); }
+      100%{ transform: translate3d(0,0,0) scale(1); }
+    }
+    @keyframes floatField{
+      0%,100%{ transform: translate3d(0,0,0); }
+      50%{ transform: translate3d(-2vw, 1.5vh, 0); }
+    }
+
     :focus-visible{
       outline: 3px solid var(--focus);
       outline-offset: 3px;
@@ -51,6 +108,7 @@
     }
 
     .wrap{ width:min(1140px, calc(100% - 44px)); margin: 22px auto 70px; }
+
     .glass{
       background: linear-gradient(180deg, var(--glass), var(--glass2));
       border: 1px solid var(--border);
@@ -58,11 +116,51 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      transform-style: preserve-3d;
+      will-change: transform;
     }
 
-    /* Reveal on scroll */
-    .reveal{ opacity:0; transform: translateY(10px); transition: opacity 520ms ease, transform 520ms ease; }
-    .reveal.in{ opacity:1; transform: translateY(0); }
+    /* Reveal on scroll (upgraded) */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px) scale(0.99);
+      filter: blur(6px);
+      transition: opacity 700ms cubic-bezier(.2,.9,.2,1),
+                  transform 700ms cubic-bezier(.2,.9,.2,1),
+                  filter 700ms cubic-bezier(.2,.9,.2,1);
+    }
+    .reveal.in{
+      opacity:1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    /* Subtle highlight sweep on cards/panels */
+    .sheen{
+      position: relative;
+      overflow:hidden;
+    }
+    .sheen::after{
+      content:"";
+      position:absolute;
+      inset:-60%;
+      background: linear-gradient(115deg,
+        transparent 40%,
+        rgba(255,255,255,0.35) 50%,
+        transparent 60%);
+      transform: translateX(-35%) rotate(8deg);
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity 240ms ease;
+    }
+    .sheen:hover::after{
+      opacity: 1;
+      animation: sweep 900ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes sweep{
+      from{ transform: translateX(-55%) rotate(8deg); }
+      to{ transform: translateX(55%) rotate(8deg); }
+    }
 
     /* Topbar */
     .topbar{
@@ -81,6 +179,11 @@
       width: 12px; height: 12px; border-radius: 999px;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), var(--accent));
       box-shadow: 0 0 0 5px rgba(37,99,235,0.12);
+      animation: pulseDot 3.2s ease-in-out infinite;
+    }
+    @keyframes pulseDot{
+      0%,100%{ box-shadow: 0 0 0 5px rgba(37,99,235,0.12); transform: translateZ(0); }
+      50%{ box-shadow: 0 0 0 10px rgba(6,182,212,0.10); transform: translateZ(8px); }
     }
     .navLinks{ display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; align-items:center; }
 
@@ -104,8 +207,9 @@
       text-decoration:none;
       transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
       backdrop-filter: blur(14px);
+      transform: translateZ(0);
     }
-    .linkBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.78); border-color: rgba(15,23,42,0.18); }
+    .linkBtn:hover{ transform: translateY(-1px) translateZ(10px); background: rgba(255,255,255,0.78); border-color: rgba(15,23,42,0.18); }
 
     /* Toast */
     .toast{
@@ -121,8 +225,27 @@
       box-shadow: 0 10px 24px rgba(2,6,23,0.08);
       backdrop-filter: blur(14px);
       max-width: 100%;
+      position: relative;
+      overflow: hidden;
     }
-    .toastText{ font-size:13px; font-weight:900; }
+    .toast::before{
+      content:"";
+      position:absolute;
+      left:-30%;
+      top:0;
+      width:30%;
+      height:100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+      opacity: 0.35;
+      transform: skewX(-14deg);
+      animation: toastSweep 3.8s ease-in-out infinite;
+    }
+    @keyframes toastSweep{
+      0%,65%{ transform: translateX(0) skewX(-14deg); opacity:0; }
+      75%{ opacity:0.35; }
+      100%{ transform: translateX(260%) skewX(-14deg); opacity:0; }
+    }
+    .toastText{ font-size:13px; font-weight:900; position: relative; z-index: 1; }
     .spin{
       width: 14px; height: 14px;
       border-radius: 50%;
@@ -131,6 +254,8 @@
       animation: spin 0.8s linear infinite;
       display:none;
       flex: 0 0 auto;
+      position: relative;
+      z-index: 1;
     }
     @keyframes spin{ to{ transform: rotate(360deg);} }
 
@@ -149,9 +274,25 @@
       gap: 10px;
       text-decoration:none;
       user-select:none;
+      position: relative;
+      overflow:hidden;
+      transform: translateZ(0);
     }
+    .btn::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(circle at var(--mx, 30%) var(--my, 20%),
+        rgba(37,99,235,0.20),
+        rgba(6,182,212,0.12),
+        transparent 55%);
+      opacity: 0;
+      transition: opacity 220ms ease;
+      pointer-events:none;
+    }
+    .btn:hover::after{ opacity: 1; }
     .btn:hover{
-      transform: translateY(-1px);
+      transform: translateY(-1px) translateZ(10px);
       background: rgba(255,255,255,0.82);
       border-color: rgba(15,23,42,0.18);
       box-shadow: 0 12px 28px rgba(2,6,23,0.08);
@@ -246,7 +387,7 @@
     @media (max-width: 980px){ .cards{ grid-template-columns: 1fr; } }
 
     .card{ padding: 18px; transition: transform 180ms ease, box-shadow 180ms ease; }
-    .card:hover{ transform: translateY(-2px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
+    .card:hover{ transform: translateY(-2px) translateZ(16px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
     .card h3{ margin: 0 0 8px; font-size: 18px; letter-spacing: -0.2px; }
     .card p{ margin:0; color: var(--muted); line-height: 1.55; font-size: 14px; }
     .icon{
@@ -269,7 +410,7 @@
     }
     @media (max-width: 980px){ .twoCol{ grid-template-columns: 1fr; } }
     .panel{ padding: 18px; transition: transform 180ms ease, box-shadow 180ms ease; }
-    .panel:hover{ transform: translateY(-2px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
+    .panel:hover{ transform: translateY(-2px) translateZ(16px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
     .panel h3{ margin:0 0 10px; font-size: 18px; }
     .panel p{ margin:0; color: var(--muted); line-height: 1.6; font-size: 14px; }
 
@@ -282,7 +423,9 @@
       color: rgba(11,18,32,0.82);
       line-height: 1.55;
       box-shadow: 0 10px 24px rgba(2,6,23,0.08);
+      transition: transform 180ms ease;
     }
+    .quote:hover{ transform: translateY(-1px); }
     .quote .name{
       display:block;
       margin-top: 8px;
@@ -326,7 +469,7 @@
     }
     @media (max-width: 980px){ .toolWrap{ grid-template-columns:1fr; } }
     .toolCard{ padding: 18px; transition: transform 180ms ease, box-shadow 180ms ease; }
-    .toolCard:hover{ transform: translateY(-2px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
+    .toolCard:hover{ transform: translateY(-2px) translateZ(18px); box-shadow: 0 22px 60px rgba(2,6,23,0.12); }
 
     .controls{
       display:flex;
@@ -346,6 +489,7 @@
       color: rgba(11,18,32,0.70);
       display:flex; align-items:center; gap:10px;
       font-weight: 950;
+      transform: translateZ(0);
     }
     .step .num{
       width:24px;height:24px;border-radius:999px;display:grid;place-items:center;
@@ -357,6 +501,11 @@
       background: rgba(37,99,235,0.10);
       border-color: rgba(37,99,235,0.22);
       color: rgba(11,18,32,0.92);
+      animation: stepPop 320ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes stepPop{
+      from{ transform: translateY(2px) scale(0.985); }
+      to{ transform: translateY(0) scale(1); }
     }
     .step.done{ opacity: 0.95; }
     .step.done .num{ background: rgba(22,163,74,0.14); }
@@ -375,12 +524,27 @@
       box-shadow: 0 10px 24px rgba(2,6,23,0.06);
       transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
       cursor: pointer;
+      position: relative;
+      overflow:hidden;
     }
+    .dropzone::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(circle at var(--mx, 40%) var(--my, 40%),
+        rgba(37,99,235,0.18),
+        rgba(6,182,212,0.10),
+        transparent 55%);
+      opacity: 0;
+      transition: opacity 220ms ease;
+      pointer-events:none;
+    }
+    .dropzone:hover::after{ opacity: 1; }
     .dropzone:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.75); border-color: rgba(37,99,235,0.28); }
     .dropzone.drag{ background: rgba(37,99,235,0.10); border-color: rgba(37,99,235,0.38); }
-    .dzLeft b{ display:block; font-size: 14px; letter-spacing:-0.1px; }
-    .dzLeft span{ color: var(--muted); font-size: 13px; }
-    .dzRight{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .dzLeft b{ display:block; font-size: 14px; letter-spacing:-0.1px; position: relative; z-index: 1; }
+    .dzLeft span{ color: var(--muted); font-size: 13px; position: relative; z-index: 1; }
+    .dzRight{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; position: relative; z-index: 1; }
     .tag{
       padding: 7px 10px;
       border-radius: 999px;
@@ -440,9 +604,25 @@
       display:none;
       box-shadow: 0 14px 40px rgba(2,6,23,0.10);
       backdrop-filter: blur(16px);
-      animation: pop 240ms ease-out both;
+      animation: pop 360ms cubic-bezier(.2,.9,.2,1) both;
+      position: relative;
+      overflow:hidden;
     }
-    @keyframes pop{ from{opacity:0; transform: translateY(8px);} to{opacity:1; transform: translateY(0);} }
+    .resultBanner::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(circle at var(--mx, 40%) var(--my, 40%),
+        rgba(37,99,235,0.18),
+        rgba(6,182,212,0.12),
+        transparent 55%);
+      opacity: 0.75;
+      pointer-events:none;
+    }
+    @keyframes pop{
+      from{opacity:0; transform: translateY(10px) scale(0.985); filter: blur(6px); }
+      to{opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
 
     .resultBanner.positive{
       border-color: rgba(239,68,68,0.22);
@@ -453,7 +633,7 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(22,163,74,0.06));
     }
 
-    .badgeRow{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; }
+    .badgeRow{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; position: relative; z-index: 1; }
     .badge{
       display:inline-flex;
       align-items:center;
@@ -481,9 +661,9 @@
       white-space: nowrap;
     }
 
-    .bigResult{ margin-top: 10px; font-size: 24px; font-weight: 1000; letter-spacing: -0.4px; }
-    .subResult{ margin-top: 6px; color: rgba(11,18,32,0.72); font-size: 13px; font-weight: 900; }
-    .advice{ margin-top: 10px; color: rgba(11,18,32,0.82); line-height: 1.6; font-size: 14px; }
+    .bigResult{ margin-top: 10px; font-size: 24px; font-weight: 1000; letter-spacing: -0.4px; position: relative; z-index: 1; }
+    .subResult{ margin-top: 6px; color: rgba(11,18,32,0.72); font-size: 13px; font-weight: 900; position: relative; z-index: 1; }
+    .advice{ margin-top: 10px; color: rgba(11,18,32,0.82); line-height: 1.6; font-size: 14px; position: relative; z-index: 1; }
     .advice ul{ margin: 8px 0 0 18px; color: rgba(11,18,32,0.70); }
     .advice li{ margin: 6px 0; }
 
@@ -496,7 +676,9 @@
       margin-top: 10px;
       box-shadow: 0 10px 24px rgba(2,6,23,0.08);
       backdrop-filter: blur(14px);
+      transition: transform 180ms ease;
     }
+    .predCard:hover{ transform: translateY(-1px); }
     .bar{ height: 10px; background: rgba(15,23,42,0.08); border-radius: 999px; overflow:hidden; margin-top: 8px; }
     .fill{
       height:100%;
@@ -516,7 +698,10 @@
       object-fit:cover;
       min-height: 340px;
       filter: saturate(1.05) contrast(1.02);
+      transform: scale(1.02);
+      transition: transform 700ms cubic-bezier(.2,.9,.2,1);
     }
+    .panel:hover .impactImg{ transform: scale(1.06); }
 
     /* Sparkles */
     .sparkle{
@@ -541,7 +726,7 @@
     /* Hide the native file input but keep it accessible */
     input[type="file"]{ display:none; }
 
-    /* NEW: Future roadmap */
+    /* Future roadmap (audience-centered) */
     .roadmapGrid{
       display:grid;
       grid-template-columns: 1.1fr 0.9fr;
@@ -572,28 +757,76 @@
       white-space: nowrap;
       margin-right: 8px;
     }
-    .photoSlot{
+    .roadmapImgWrap{
       height: 100%;
       min-height: 320px;
       border-radius: 18px;
-      border: 1px dashed rgba(15,23,42,0.22);
+      border: 1px solid rgba(15,23,42,0.10);
+      overflow:hidden;
       background: rgba(255,255,255,0.58);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding: 18px;
-      color: rgba(11,18,32,0.72);
       box-shadow: 0 10px 24px rgba(2,6,23,0.06);
+      position: relative;
     }
-    .photoSlot b{ display:block; font-size: 14px; letter-spacing:-0.1px; }
-    .photoSlot span{ display:block; margin-top: 8px; color: rgba(11,18,32,0.60); font-size: 13px; line-height: 1.55; }
+    .roadmapImgWrap img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scale(1.04);
+      transition: transform 900ms cubic-bezier(.2,.9,.2,1);
+      filter: saturate(1.05) contrast(1.02);
+    }
+    .roadmapImgWrap:hover img{ transform: scale(1.10); }
+    .imgOverlay{
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(2,6,23,0.00), rgba(2,6,23,0.30));
+      pointer-events:none;
+    }
+    .imgCaption{
+      position:absolute;
+      left: 14px;
+      bottom: 14px;
+      right: 14px;
+      color: rgba(255,255,255,0.92);
+      font-weight: 950;
+      letter-spacing:-0.2px;
+      text-shadow: 0 8px 22px rgba(2,6,23,0.35);
+      font-size: 13px;
+    }
+
+    /* Cursor follower */
+    .cursorBlob{
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      border-radius: 999px;
+      pointer-events:none;
+      z-index: -1;
+      background: radial-gradient(circle at 30% 30%,
+        rgba(37,99,235,0.18),
+        rgba(6,182,212,0.10),
+        transparent 60%);
+      filter: blur(26px);
+      transform: translate3d(-999px,-999px,0);
+      transition: transform 60ms linear;
+      opacity: 0.65;
+      mix-blend-mode: multiply;
+    }
   </style>
 </head>
 
 <body>
+  <!-- Ambient background -->
+  <div class="ambient" aria-hidden="true">
+    <div class="orb" style="left:8%; top:12%;"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+  </div>
+  <div class="cursorBlob" id="cursorBlob" aria-hidden="true"></div>
+
   <main class="wrap">
-    <header class="topbar glass reveal">
+    <header class="topbar glass reveal sheen">
       <div class="brand">
         <span class="logoDot"></span>
         <span>Intelli-Monia</span>
@@ -601,14 +834,13 @@
       <nav class="navLinks">
         <a class="linkBtn" href="#tool">Try it</a>
         <a class="linkBtn" href="#impact">Impact</a>
-        <a class="linkBtn" href="#whattodo">What to do</a>
         <a class="linkBtn" href="#roadmap">Future</a>
         <span class="pill">Educational demo • Not medical advice</span>
       </nav>
     </header>
 
     <section class="hero">
-      <div class="heroLeft glass reveal">
+      <div class="heroLeft glass reveal sheen">
         <div class="kicker"><span class="kickerLine"></span>AI-assisted screening</div>
         <h1>Welcome to Intelli-Monia.</h1>
         <p class="mission">
@@ -623,7 +855,7 @@
         </div>
       </div>
 
-      <div class="heroRight glass reveal">
+      <div class="heroRight glass reveal sheen">
         <svg class="heroSvg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <linearGradient id="g1" x1="0" x2="1">
@@ -658,19 +890,19 @@
 
         <div class="heroRightInner">
           <div class="stats" style="margin:0;">
-            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+            <div class="stat glass sheen" style="box-shadow:var(--shadow2); border-radius:18px;">
               <div class="num">Browser</div>
               <div class="lbl">Runs locally (no server required for the demo).</div>
             </div>
-            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+            <div class="stat glass sheen" style="box-shadow:var(--shadow2); border-radius:18px;">
               <div class="num">Private</div>
               <div class="lbl">No image storage by default in this page.</div>
             </div>
-            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+            <div class="stat glass sheen" style="box-shadow:var(--shadow2); border-radius:18px;">
               <div class="num">Fast</div>
               <div class="lbl">Instant inference after upload (device dependent).</div>
             </div>
-            <div class="stat glass" style="box-shadow:var(--shadow2); border-radius:18px;">
+            <div class="stat glass sheen" style="box-shadow:var(--shadow2); border-radius:18px;">
               <div class="num">Demo</div>
               <div class="lbl">Educational only, not medical advice.</div>
             </div>
@@ -685,17 +917,17 @@
 
     <h2 class="sectionTitle reveal">How Intelli-Monia Can Help</h2>
     <section class="cards">
-      <div class="card glass reveal">
+      <div class="card glass reveal sheen">
         <div class="icon">⏱️</div>
         <h3>Faster first look</h3>
         <p>Get a preliminary label in seconds after upload, which can help you know what questions to ask next.</p>
       </div>
-      <div class="card glass reveal">
+      <div class="card glass reveal sheen">
         <div class="icon">📈</div>
         <h3>Analytics-ready</h3>
         <p>Future add-on: track time-to-result, screenings/day, and confidence trends to measure workflow impact.</p>
       </div>
-      <div class="card glass reveal">
+      <div class="card glass reveal sheen">
         <div class="icon">🔒</div>
         <h3>Privacy-first</h3>
         <p>The demo runs locally in your browser. Future add-on: consent-based, anonymized logging.</p>
@@ -705,19 +937,19 @@
     <!-- Impact -->
     <h2 class="sectionTitle reveal" id="impact">Impact</h2>
     <section class="twoCol">
-      <div class="panel glass reveal">
-        <h3>Why this is amazing</h3>
+      <div class="panel glass reveal sheen">
+        <h3>Why this matters</h3>
         <p>
           Intelli-Monia demonstrates how AI can support healthcare by providing fast, consistent screening signals from chest X-rays.
           In real-world clinical workflows, radiologists interpret imaging alongside patient history and symptoms. Tools like this can help
           prioritize cases, reduce delays in initial triage, and support low-resource settings where specialist access is limited.
         </p>
         <div class="quote">
-          <b>What this can help with:</b>
+          <b>Where it can help (as a secondary signal):</b>
           <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
             <li>Faster awareness while waiting for official reads</li>
-            <li>Supporting triage in busy clinics (as a secondary signal)</li>
-            <li>Helping educational understanding of AI in medicine</li>
+            <li>Supporting triage in busy clinics</li>
+            <li>Building understanding of AI in medical imaging</li>
           </ul>
           <span class="name">Educational demo — not a diagnostic device</span>
         </div>
@@ -726,8 +958,7 @@
         </p>
       </div>
 
-      <div class="panel glass reveal" style="padding:0; overflow:hidden;">
-        <!-- IMPORTANT: Put a real image file in your repo at assets/doctor-radiology.jpg -->
+      <div class="panel glass reveal sheen" style="padding:0; overflow:hidden;">
         <img
           class="impactImg"
           src="https://www.goodwin.edu/enews/wp-content/uploads/2026/01/radiography-vs-radiology-whats-the-difference-blog-image.jpg"
@@ -736,7 +967,7 @@
       </div>
     </section>
 
-    <details class="glass reveal">
+    <details class="glass reveal sheen">
       <summary>
         How it works (simple explanation)
         <span class="expandHint">Click to Expand</span>
@@ -746,7 +977,7 @@
       </div>
     </details>
 
-    <details class="glass reveal">
+    <details class="glass reveal sheen">
       <summary>
         Limitations (important)
         <span class="expandHint">Click to Expand</span>
@@ -759,7 +990,7 @@
     <h2 class="sectionTitle reveal" id="tool">Try Intelli-Monia</h2>
 
     <section class="toolWrap">
-      <div class="toolCard glass reveal">
+      <div class="toolCard glass reveal sheen">
         <h3 style="margin:0 0 8px;">Upload and test an X-ray</h3>
 
         <div class="toast" aria-live="polite" role="status">
@@ -792,6 +1023,7 @@
           </div>
         </div>
 
+        <!-- RESULT + “What to do next” now lives inside the tool (not a separate site section) -->
         <div class="resultBanner" id="resultBanner" aria-live="polite">
           <div class="badgeRow">
             <div class="badge">
@@ -803,17 +1035,25 @@
 
           <div class="bigResult" id="bigResultText"></div>
           <div class="subResult" id="subResultText"></div>
+
           <div class="advice" id="postAdvice"></div>
+
+          <div class="quote" style="margin-top:12px;">
+            <b>Important:</b> This is an educational screening demo and cannot confirm or rule out pneumonia.
+            If you feel unwell, consult a clinician. For severe symptoms (trouble breathing, chest pain, confusion),
+            seek urgent care.
+            <span class="name">Safety-first guidance</span>
+          </div>
         </div>
 
         <div id="labelContainer"></div>
 
         <div class="foot">
-          Safety note: This is educational and cannot confirm or rule out pneumonia. If you feel unwell or have breathing trouble, seek medical care.
+          This is educational and cannot replace a professional interpretation. The model output is only one input among symptoms and clinician evaluation.
         </div>
       </div>
 
-      <div class="previewBox glass reveal">
+      <div class="previewBox glass reveal sheen">
         <div class="previewPlaceholder" id="placeholder">
           <b>Preview Panel</b><br/>
           Your uploaded image will appear here.
@@ -822,96 +1062,66 @@
       </div>
     </section>
 
-    <h2 class="sectionTitle reveal" id="whattodo">What to do next</h2>
-    <section class="twoCol">
-      <div class="panel glass reveal">
-        <h3>If the result suggests pneumonia</h3>
-        <p>Use this as a conversation starter, not a diagnosis.</p>
-        <div class="quote">
-          <b>Next steps:</b>
-          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
-            <li>Consult a clinician for a formal read and physical exam.</li>
-            <li>Share symptoms (fever, cough, shortness of breath, chest pain).</li>
-            <li>Seek urgent care for severe symptoms or breathing difficulty.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="panel glass reveal">
-        <h3>If the result suggests normal</h3>
-        <p>A normal label does not guarantee everything is fine.</p>
-        <div class="quote">
-          <b>Next steps:</b>
-          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
-            <li>If symptoms persist, consult a clinician anyway.</li>
-            <li>Retest with a clearer image if available and compare confidence.</li>
-            <li>Remember: image quality and positioning affect predictions.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW: BOTTOM future roadmap section -->
-    <h2 class="sectionTitle reveal" id="roadmap">Future Additions Roadmap</h2>
+    <!-- Audience-centered roadmap -->
+    <h2 class="sectionTitle reveal" id="roadmap">What you can expect next</h2>
     <section class="roadmapGrid">
-      <div class="panel glass reveal">
-        <h3>Planned upgrades (with target dates)</h3>
+      <div class="panel glass reveal sheen">
+        <h3>Planned improvements (target timeline)</h3>
         <p style="margin:0; color: var(--muted); line-height: 1.6; font-size: 14px;">
-          A realistic build plan that makes the project look “alive” and shows what comes next.
+          These upgrades are designed to improve clarity, reliability, and the overall experience for patients, families, and educators.
         </p>
 
         <div class="quote" style="margin-top:12px;">
           <ul class="milestones">
             <li>
               <span class="dateTag">~1 month</span>
-              Add a <b>model confidence explanation</b> (what probability means) + better “limitations” prompts for users.
+              Clearer <b>confidence explanations</b> and smarter wording so results are easier to interpret responsibly.
             </li>
             <li>
               <span class="dateTag">~2 months</span>
-              Build <b>image quality checks</b> (blurry/too dark/low-res warnings) before allowing a test.
+              <b>Image quality checks</b> (blur/low-resolution warnings) to reduce misleading outputs caused by poor inputs.
             </li>
             <li>
               <span class="dateTag">~3 months</span>
-              Add a <b>results dashboard</b>: uploads/day, avg time-to-result, and confidence distribution (demo analytics).
+              A <b>results summary view</b> that presents confidence trends and helps users understand consistency across retests.
             </li>
             <li>
               <span class="dateTag">~6 months</span>
-              Do <b>model versioning</b> (v1 vs v2), a changelog, and show basic evaluation metrics from your dataset.
+              <b>Model version transparency</b> (v1 vs v2), plus a public changelog and basic evaluation metrics.
             </li>
             <li>
               <span class="dateTag">~1 year</span>
-              Expand to a <b>multi-condition screening demo</b> (e.g., normal vs pneumonia vs other) with careful labeling and stronger disclaimers.
+              Broader <b>screening categories</b> (still educational) with stronger guardrails and improved explainability.
             </li>
           </ul>
-          <span class="name">Note: Keep it educational unless you have proper clinical validation.</span>
+          <span class="name">Timelines are estimates and depend on evaluation and data quality.</span>
         </div>
 
         <div class="quote">
-          <b>Optional “wow” additions:</b>
+          <b>Experience upgrades:</b>
           <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
-            <li>On-page “report export” (PDF summary of result + disclaimers)</li>
-            <li>Calibration demo (show how confidence can be over/under confident)</li>
-            <li>Accessibility upgrades (high-contrast toggle, keyboard-first flow)</li>
+            <li>Exportable summary (for learning / documentation)</li>
+            <li>Accessibility enhancements (keyboard flow + contrast toggle)</li>
+            <li>More guidance tailored to responsible interpretation</li>
           </ul>
-          <span class="name">These look impressive in a fair write-up.</span>
+          <span class="name">Built to keep the product clear and trustworthy.</span>
         </div>
       </div>
 
-      <div class="panel glass reveal">
-        <div class="photoSlot">
-          <div>
-            <b>Photo / Diagram Placeholder</b>
-            <span>
-              Add a screenshot of your model dashboard, dataset example, or a simple workflow diagram.<br/>
-              (Replace this box with an &lt;img&gt; later.)
-            </span>
-          </div>
+      <div class="panel glass reveal sheen" style="padding:0;">
+        <div class="roadmapImgWrap">
+          <img
+            src="https://img.freepik.com/premium-photo/person-using-vr-ar-googles_941097-255404.jpg"
+            alt="Person using VR/AR goggles"
+          />
+          <div class="imgOverlay" aria-hidden="true"></div>
+          <div class="imgCaption">Visual placeholder — replace with your own product graphic or workflow diagram</div>
         </div>
       </div>
     </section>
 
     <footer class="foot reveal" style="margin-top:18px;">
-      This is a school project demo. Replace illustrative claims/testimonials with real evaluation results from your experiment.
+      This is a school project demo. Replace illustrative claims with real evaluation results from your experiment.
     </footer>
   </main>
 
@@ -947,6 +1157,73 @@
     const s1 = document.getElementById("s1");
     const s2 = document.getElementById("s2");
     const s3 = document.getElementById("s3");
+
+    // Cursor blob + sparkles (lightweight)
+    const cursorBlob = document.getElementById("cursorBlob");
+    let blobX = -999, blobY = -999;
+
+    // Smooth cursor follower
+    window.addEventListener("pointermove", (e) => {
+      blobX += (e.clientX - blobX) * 0.18;
+      blobY += (e.clientY - blobY) * 0.18;
+      cursorBlob.style.transform = `translate3d(${blobX - 130}px, ${blobY - 130}px, 0)`;
+
+      // Sparkles (keep subtle)
+      const now = performance.now();
+      if(!window.__lastSparkle) window.__lastSparkle = 0;
+      if(now - window.__lastSparkle < 55) return;
+      window.__lastSparkle = now;
+
+      const s = document.createElement("div");
+      s.className = "sparkle";
+      s.style.left = e.clientX + "px";
+      s.style.top = e.clientY + "px";
+
+      const size = 6 + Math.random()*8;
+      s.style.width = size + "px";
+      s.style.height = size + "px";
+      s.style.opacity = (0.55 + Math.random()*0.25).toFixed(2);
+
+      const hue = 190 + Math.random()*60;
+      s.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), hsla(${hue}, 90%, 55%, 0.85))`;
+      s.style.boxShadow = `0 0 14px hsla(${hue}, 90%, 55%, 0.18)`;
+
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 520);
+    });
+
+    // 3D tilt on “glass” elements (Cuberto-ish)
+    function attachTilt(el){
+      const max = 7; // degrees
+      el.addEventListener("pointermove", (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+
+        const rx = (py - 0.5) * -2 * max;
+        const ry = (px - 0.5) *  2 * max;
+
+        el.style.transform = `translateZ(0) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+        el.style.setProperty("--mx", `${(px*100).toFixed(1)}%`);
+        el.style.setProperty("--my", `${(py*100).toFixed(1)}%`);
+      });
+      el.addEventListener("pointerleave", () => {
+        el.style.transform = "translateZ(0)";
+      });
+    }
+
+    // Button glow follows mouse
+    document.querySelectorAll(".btn, .dropzone, .resultBanner").forEach(el => {
+      el.addEventListener("pointermove", (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        el.style.setProperty("--mx", `${(px*100).toFixed(1)}%`);
+        el.style.setProperty("--my", `${(py*100).toFixed(1)}%`);
+      });
+    });
+
+    document.querySelectorAll(".glass").forEach(el => attachTilt(el));
 
     let state = {
       modelLoaded: false,
@@ -1129,40 +1406,42 @@
       resultLabel.textContent = `Top result: ${bestName}`;
       resultConfidence.textContent = `Confidence: ${bestPct}%`;
 
+      // Make “what to do next” appear inside the test result area (professional guidance)
       if(isPositive){
         resultBanner.classList.add("positive");
         setDot(getComputedStyle(document.documentElement).getPropertyValue("--warn").trim() || "#ef4444");
-        bigResultText.textContent = "Possible pneumonia detected";
-        subResultText.textContent = "This is an educational estimate, not a diagnosis.";
+        bigResultText.textContent = "Possible pneumonia pattern detected";
+        subResultText.textContent = "Educational estimate — not a diagnosis.";
         postAdvice.innerHTML = `
-          <b>Recommended next steps:</b>
+          <b>What to do next:</b>
           <ul>
-            <li>Consult a medical professional for a formal interpretation.</li>
-            <li>If you have trouble breathing, chest pain, confusion, or blue lips, seek urgent care.</li>
-            <li>Bring the X-ray plus symptoms to a clinician for evaluation.</li>
+            <li>Consult a medical professional for a formal interpretation and exam.</li>
+            <li>Share symptoms (fever, cough, shortness of breath, chest pain) and onset timing.</li>
+            <li>If severe symptoms are present, seek urgent care immediately.</li>
           </ul>
         `;
       } else {
         resultBanner.classList.add("negative");
         setDot(getComputedStyle(document.documentElement).getPropertyValue("--ok").trim() || "#16a34a");
-        bigResultText.textContent = "No pneumonia detected by this model";
+        bigResultText.textContent = "No pneumonia pattern detected by this model";
         subResultText.textContent = "A “normal” AI result does not guarantee everything is fine.";
         postAdvice.innerHTML = `
-          <b>Recommended next steps:</b>
+          <b>What to do next:</b>
           <ul>
-            <li>If symptoms persist, consult a clinician anyway.</li>
-            <li>Retest with a clearer image if available and compare confidence.</li>
-            <li>Remember: image quality and positioning affect predictions.</li>
+            <li>If symptoms persist or worsen, consult a clinician anyway.</li>
+            <li>Consider retesting with a clearer image (positioning and quality matter).</li>
+            <li>Use this result as one data point, not a conclusion.</li>
           </ul>
         `;
       }
 
       labelContainer.innerHTML = "";
-      prediction.forEach(p => {
+      prediction.forEach((p, i) => {
         const pct = Math.round(p.probability * 100);
 
         const card = document.createElement("div");
-        card.className = "predCard";
+        card.className = "predCard reveal in";
+        card.style.transitionDelay = (i * 55) + "ms";
 
         const label = document.createElement("div");
         label.style.fontWeight = "950";
@@ -1182,43 +1461,28 @@
 
         requestAnimationFrame(() => { fill.style.width = `${pct}%`; });
       });
+
+      // Scroll the user to the result smoothly (feels premium)
+      requestAnimationFrame(() => {
+        resultBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
     }
 
-    // Scroll reveal
+    // Scroll reveal (with stagger)
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if(e.isIntersecting){
+          const delay = e.target.getAttribute("data-delay");
+          if(delay) e.target.style.transitionDelay = delay + "ms";
           e.target.classList.add("in");
           observer.unobserve(e.target);
         }
       });
     }, { threshold: 0.12 });
 
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-
-    // Cursor sparkle (lightweight)
-    let lastSparkle = 0;
-    window.addEventListener("pointermove", (e) => {
-      const now = performance.now();
-      if(now - lastSparkle < 40) return;
-      lastSparkle = now;
-
-      const s = document.createElement("div");
-      s.className = "sparkle";
-      s.style.left = e.clientX + "px";
-      s.style.top = e.clientY + "px";
-
-      const size = 6 + Math.random()*8;
-      s.style.width = size + "px";
-      s.style.height = size + "px";
-      s.style.opacity = (0.7 + Math.random()*0.25).toFixed(2);
-
-      const hue = 190 + Math.random()*60;
-      s.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), hsla(${hue}, 90%, 55%, 0.85))`;
-      s.style.boxShadow = `0 0 14px hsla(${hue}, 90%, 55%, 0.25)`;
-
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 560);
+    document.querySelectorAll(".reveal").forEach((el, idx) => {
+      if(!el.getAttribute("data-delay")) el.setAttribute("data-delay", (idx % 6) * 45);
+      observer.observe(el);
     });
 
     // Initial UI state
