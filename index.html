@@ -540,6 +540,54 @@
 
     /* Hide the native file input but keep it accessible */
     input[type="file"]{ display:none; }
+
+    /* NEW: Future roadmap */
+    .roadmapGrid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 980px){ .roadmapGrid{ grid-template-columns: 1fr; } }
+
+    .milestones{
+      margin: 0;
+      padding-left: 18px;
+      color: rgba(11,18,32,0.74);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+    .milestones li{ margin: 10px 0; }
+    .dateTag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.80);
+      font-weight: 950;
+      color: rgba(11,18,32,0.82);
+      font-size: 12px;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+    .photoSlot{
+      height: 100%;
+      min-height: 320px;
+      border-radius: 18px;
+      border: 1px dashed rgba(15,23,42,0.22);
+      background: rgba(255,255,255,0.58);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding: 18px;
+      color: rgba(11,18,32,0.72);
+      box-shadow: 0 10px 24px rgba(2,6,23,0.06);
+    }
+    .photoSlot b{ display:block; font-size: 14px; letter-spacing:-0.1px; }
+    .photoSlot span{ display:block; margin-top: 8px; color: rgba(11,18,32,0.60); font-size: 13px; line-height: 1.55; }
   </style>
 </head>
 
@@ -553,8 +601,8 @@
       <nav class="navLinks">
         <a class="linkBtn" href="#tool">Try it</a>
         <a class="linkBtn" href="#impact">Impact</a>
-        <a class="linkBtn" href="#stories">Stories</a>
         <a class="linkBtn" href="#whattodo">What to do</a>
+        <a class="linkBtn" href="#roadmap">Future</a>
         <span class="pill">Educational demo • Not medical advice</span>
       </nav>
     </header>
@@ -708,45 +756,6 @@
       </div>
     </details>
 
-    <h2 class="sectionTitle reveal" id="stories">Testimonials & Future Add-ons</h2>
-    <section class="twoCol">
-      <div class="panel glass reveal">
-        <h3>Testimonials (demo)</h3>
-        <p>Sample testimonials for a school project demo.</p>
-
-        <div class="quote">
-          “The instant feedback helped me understand what to ask my doctor and reduced stress.”
-          <span class="name">— Student tester</span>
-        </div>
-        <div class="quote">
-          “Simple to use, and the guidance section made the limitations clear.”
-          <span class="name">— Parent tester</span>
-        </div>
-        <div class="quote">
-          “Fast and clean UI. I like that it runs right in the browser.”
-          <span class="name">— Community volunteer</span>
-        </div>
-      </div>
-
-      <div class="panel glass reveal">
-        <h3>Next-level features to add</h3>
-        <p>Ideas you can mention in your report and build later:</p>
-
-        <div class="quote">
-          <b>Results dashboard:</b> average time-to-result, uploads/day, confidence histogram.
-          <span class="name">— Analytics</span>
-        </div>
-        <div class="quote">
-          <b>Quality checks:</b> warn on blurry/low-res images before testing.
-          <span class="name">— Data quality</span>
-        </div>
-        <div class="quote">
-          <b>Model versioning:</b> compare v1 vs v2 accuracy and show a changelog.
-          <span class="name">— Experiment design</span>
-        </div>
-      </div>
-    </section>
-
     <h2 class="sectionTitle reveal" id="tool">Try Intelli-Monia</h2>
 
     <section class="toolWrap">
@@ -838,6 +847,65 @@
             <li>Retest with a clearer image if available and compare confidence.</li>
             <li>Remember: image quality and positioning affect predictions.</li>
           </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: BOTTOM future roadmap section -->
+    <h2 class="sectionTitle reveal" id="roadmap">Future Additions Roadmap</h2>
+    <section class="roadmapGrid">
+      <div class="panel glass reveal">
+        <h3>Planned upgrades (with target dates)</h3>
+        <p style="margin:0; color: var(--muted); line-height: 1.6; font-size: 14px;">
+          A realistic build plan that makes the project look “alive” and shows what comes next.
+        </p>
+
+        <div class="quote" style="margin-top:12px;">
+          <ul class="milestones">
+            <li>
+              <span class="dateTag">~1 month</span>
+              Add a <b>model confidence explanation</b> (what probability means) + better “limitations” prompts for users.
+            </li>
+            <li>
+              <span class="dateTag">~2 months</span>
+              Build <b>image quality checks</b> (blurry/too dark/low-res warnings) before allowing a test.
+            </li>
+            <li>
+              <span class="dateTag">~3 months</span>
+              Add a <b>results dashboard</b>: uploads/day, avg time-to-result, and confidence distribution (demo analytics).
+            </li>
+            <li>
+              <span class="dateTag">~6 months</span>
+              Do <b>model versioning</b> (v1 vs v2), a changelog, and show basic evaluation metrics from your dataset.
+            </li>
+            <li>
+              <span class="dateTag">~1 year</span>
+              Expand to a <b>multi-condition screening demo</b> (e.g., normal vs pneumonia vs other) with careful labeling and stronger disclaimers.
+            </li>
+          </ul>
+          <span class="name">Note: Keep it educational unless you have proper clinical validation.</span>
+        </div>
+
+        <div class="quote">
+          <b>Optional “wow” additions:</b>
+          <ul style="margin:10px 0 0 18px; color: rgba(11,18,32,0.70); line-height:1.55;">
+            <li>On-page “report export” (PDF summary of result + disclaimers)</li>
+            <li>Calibration demo (show how confidence can be over/under confident)</li>
+            <li>Accessibility upgrades (high-contrast toggle, keyboard-first flow)</li>
+          </ul>
+          <span class="name">These look impressive in a fair write-up.</span>
+        </div>
+      </div>
+
+      <div class="panel glass reveal">
+        <div class="photoSlot">
+          <div>
+            <b>Photo / Diagram Placeholder</b>
+            <span>
+              Add a screenshot of your model dashboard, dataset example, or a simple workflow diagram.<br/>
+              (Replace this box with an &lt;img&gt; later.)
+            </span>
+          </div>
         </div>
       </div>
     </section>
